@@ -5,7 +5,7 @@
 <head>
 
   <meta charset="utf-8">
-  <title>COAST | SCATTN Animator</title>
+  <title>SCATTN Animal Tracker</title>
 
   <!-- FONTS -->
   <link href='https://fonts.googleapis.com/css?family=Roboto' rel='stylesheet' type='text/css'>
@@ -25,15 +25,23 @@
 
 <body onload="readTaggingFile('SCATTN_TaggingMetadata_JWS.csv')">
 
+  <div id="header">
+    <h1>SCATTN Animal Tracker</h1>
+  </div>
+
   <div id="page">
-    <div class="dropdown" style="float:left;">
-      <button class="dropbtn">Choose a Shark</button>
-      <div id="myDropdown" class="dropdown-content" onchange="myFunction()">
-        <a href="#">Link 1</a>
-        <a href="#">Link 2</a>
-        <a href="#">Link 3</a>
+
+    <div id="sidebar">
+      <div class="dropdown">
+        <button class="dropbtn">Choose a Shark</button>
+        <div id="myDropdown" class="dropdown-content" onchange="myFunction()">
+          <a href="#">Shark 1</a>
+          <a href="#">Shark 2</a>
+          <a href="#">Shark 3</a>
+        </div>
       </div>
     </div>
+
     <div id="googleMap" style="width:1024px;height:725px;"></div>
   </div>
 
