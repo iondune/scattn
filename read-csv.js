@@ -43,16 +43,27 @@ function initialize() {
     }
   };
 
-  var imageBounds = {
-      north: 43.004647,
-      south: 31.428663,
-      east: -117.026367,
-      west: -127.309570
+  var imageBoundsLeft = {
+      north: 90.000000,
+      south: -90.000000,
+      east: 179.999999,
+      west: 0.000000
+  };
+
+  var imageBoundsRight = {
+      north: 90.000000,
+      south: -90.000000,
+      east: 0.000000,
+      west: -179.999999
   };
 
   map=new google.maps.Map(document.getElementById("googleMap"),mapProp);
-  var tempOverlay = new google.maps.GroundOverlay('http://users.csc.calpoly.edu/~lhodzic/tempOverlay.png',imageBounds);
-  tempOverlay.setMap(map);
+  var imgurlLeft = 'https://users.csc.calpoly.edu/~waschura/left_20160527-JPL-L4UHfnd-GLOB-v01-fv04-MUR.nc.png';
+  var tempOverlayLeft = new google.maps.GroundOverlay(imgurlLeft,imageBoundsLeft);
+  tempOverlayLeft.setMap(map);
+  var imgurlRight = 'https://users.csc.calpoly.edu/~waschura/right_20160527-JPL-L4UHfnd-GLOB-v01-fv04-MUR.nc.png';
+  var tempOverlayRight = new google.maps.GroundOverlay(imgurlRight,imageBoundsRight);
+  tempOverlayRight.setMap(map);
 }
 
 // function readReceiverFile(file) {
