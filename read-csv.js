@@ -42,7 +42,7 @@ function initialize() {
         position: google.maps.ControlPosition.TOP_RIGHT
     }
   };
-  
+
   var imageBounds = {
       north: 43.004647,
       south: 31.428663,
@@ -81,12 +81,12 @@ function initialize() {
 
 //         var data = allTextLines[i].split(",");
 
-//         if (data.length == headers.length) {    
+//         if (data.length == headers.length) {
 //             stationNames.push(data[4]);
 //             var latitude = data[5];
 //             var longitude = data[6];
 //             var point = latitude + "," + longitude;
-//             receiverData[stationName] = point; 
+//             receiverData[stationName] = point;
 //         }
 //     }
 
@@ -150,7 +150,7 @@ function parseData(allText) {
 
         var data = allTextLines[i].split(",");
 
-        if (data.length == headers.length) {    
+        if (data.length == headers.length) {
             // var shark = taggingData[0];
            // if (data[2] == shark["tag"]) {
                 var latitude = data[8];
