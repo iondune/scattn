@@ -1,69 +1,42 @@
 <!-- key=AIzaSyAYi-F_PAoF_0XWtyOyFJxyF-CSP4EQR8M& -->
 <!DOCTYPE html>
-<html>
+<html lang="en">
+
 <head>
-<style>
-/* Dropdown Button */
-.dropbtn {
-    background-color: #4CAF50;
-    color: white;
-    padding: 16px;
-    font-size: 16px;
-    border: none;
-    cursor: pointer;
-}
 
-/* The container <div> - needed to position the dropdown content */
-.dropdown {
-    position: relative;
-    display: inline-block;
-}
+  <meta charset="utf-8">
+  <title>COAST | SCATTN Animator</title>
 
-/* Dropdown Content (Hidden by Default) */
-.dropdown-content {
-    display: none;
-    position: absolute;
-    background-color: #f9f9f9;
-    min-width: 160px;
-    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
-}
+  <!-- FONTS -->
+  <link href='https://fonts.googleapis.com/css?family=Roboto' rel='stylesheet' type='text/css'>
+  <link href='https://fonts.googleapis.com/css?family=Montserrat' rel='stylesheet' type='text/css'>
 
-/* Links inside the dropdown */
-.dropdown-content a {
-    color: black;
-    padding: 12px 16px;
-    text-decoration: none;
-    display: block;
-}
+  <!-- CSS -->
+  <link rel="stylesheet" href="css/main.css">
+  <link rel="stylesheet" href="css/dropdown.css">
 
-/* Change color of dropdown links on hover */
-.dropdown-content a:hover {background-color: #f1f1f1}
+  <!-- SCRIPTS -->
+  <script type="text/javascript" src="read-csv.js"></script>
+  <script async defer src="http://maps.googleapis.com/maps/api/js?callback=initialize"></script>
 
-/* Show the dropdown menu on hover */
-.dropdown:hover .dropdown-content {
-    display: block;
-}
-
-/* Change the background color of the dropdown button when the dropdown content is shown */
-.dropdown:hover .dropbtn {
-    background-color: #3e8e41;
-}
-</style>
-<script type="text/javascript" src="read-csv.js"></script>
-<script async defer src="http://maps.googleapis.com/maps/api/js?callback=initialize"></script>
+  <!-- FAVICON -->
+  <link rel="icon" type="image/png" href="img/favicon.png">
 </head>
 
 <body onload="readTaggingFile('SCATTN_TaggingMetadata_JWS.csv')">
-<div id="page">
-<div class="dropdown" style="float:left;">
-  <button class="dropbtn">Choose a Shark</button>
-  <div id="myDropdown" class="dropdown-content" onchange="myFunction()">
-    <a href="#">Link 1</a>
-    <a href="#">Link 2</a>
-    <a href="#">Link 3</a>
+
+  <div id="page">
+    <div class="dropdown" style="float:left;">
+      <button class="dropbtn">Choose a Shark</button>
+      <div id="myDropdown" class="dropdown-content" onchange="myFunction()">
+        <a href="#">Link 1</a>
+        <a href="#">Link 2</a>
+        <a href="#">Link 3</a>
+      </div>
+    </div>
+    <div id="googleMap" style="width:1024px;height:725px;"></div>
   </div>
-</div>
-<div id="googleMap" style="width:1024px;height:725px;"></div>
-</div>
+
 </body>
+
 </html>
