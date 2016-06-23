@@ -58,10 +58,10 @@ function initialize() {
   };
 
   map=new google.maps.Map(document.getElementById("googleMap"),mapProp);
-  var imgurlLeft = 'https://users.csc.calpoly.edu/~waschura/left_20160527-JPL-L4UHfnd-GLOB-v01-fv04-MUR.nc.png';
+  var imgurlLeft = 'http://topaz.iondune.net/coast/jpl-mursst/left_20160621-JPL-L4UHfnd-GLOB-v01-fv04-MUR.nc.png';
   var tempOverlayLeft = new google.maps.GroundOverlay(imgurlLeft,imageBoundsLeft);
   tempOverlayLeft.setMap(map);
-  var imgurlRight = 'https://users.csc.calpoly.edu/~waschura/right_20160527-JPL-L4UHfnd-GLOB-v01-fv04-MUR.nc.png';
+  var imgurlRight = 'http://topaz.iondune.net/coast/jpl-mursst/right_20160621-JPL-L4UHfnd-GLOB-v01-fv04-MUR.nc.png';
   var tempOverlayRight = new google.maps.GroundOverlay(imgurlRight,imageBoundsRight);
   tempOverlayRight.setMap(map);
 }
