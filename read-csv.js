@@ -53,13 +53,8 @@ function initialize() {
 
 function loadOverlays(date) {
 
-  if (overlayLeft != null) {
-    overlayLeft.setMap(null);
-  }
-
-  if (overlayRight != null) {
-    overlayRight.setMap(null);
-  }
+  var lastOverlayLeft = overlayLeft;
+  var lastOverlayRight = overlayRight;
 
   var imageBoundsLeft = {
       north: 90.000000,
@@ -86,6 +81,14 @@ function loadOverlays(date) {
 
   overlayRight = new google.maps.GroundOverlay(imgurlRight,imageBoundsRight);
   overlayRight.setMap(map);
+
+  if (lastOverlayLeft != null) {
+    lastOverlayLeft.setMap(null);
+  }
+
+  if (lastOverlayRight != null) {
+    lastOverlayRight.setMap(null);
+  }
 }
 
 // function readReceiverFile(file) {
