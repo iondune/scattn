@@ -53,8 +53,8 @@ function initialize() {
   var imageBoundsRight = {
       north: 90.000000,
       south: -90.000000,
-      east: 0.000000,
-      west: -179.999999
+      east: 0.500000,
+      west: -179.500000
   };
 
   map=new google.maps.Map(document.getElementById("googleMap"),mapProp);
