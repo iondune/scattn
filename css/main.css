@@ -28,3 +28,7 @@ body, button, h1, h2, h3, h4, h5 {
   margin-left: auto;
   margin-right: auto;
 }
+
+.spacer {
+  margin-bottom: 16px;
+}

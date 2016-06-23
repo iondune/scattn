@@ -25,6 +25,9 @@ var pathColors = ['#66FFFF',   '#66FFCC', '#66FF99', '#66FF66', '#66FF33', '#66F
 '#0033FF', '#0033CC', '#003399', '#003366', '#003333', '#003300',
 '#0000FF', '#0000CC', '#000099', '#000066','#000033'];
 
+var overlayLeft = null;
+var overlayRight = null;
+
 function initialize() {
   var mapProp = {
     center:new google.maps.LatLng(34.007552, -118.500061),
@@ -43,6 +46,21 @@ function initialize() {
     }
   };
 
+  map = new google.maps.Map(document.getElementById("googleMap"), mapProp);
+
+  loadOverlays('20160621');
+}
+
+function loadOverlays(date) {
+
+  if (overlayLeft != null) {
+    overlayLeft.setMap(null);
+  }
+
+  if (overlayRight != null) {
+    overlayRight.setMap(null);
+  }
+
   var imageBoundsLeft = {
       north: 90.000000,
       south: -90.000000,
@@ -57,13 +75,17 @@ function initialize() {
       west: -179.500000
   };
 
-  map=new google.maps.Map(document.getElementById("googleMap"),mapProp);
-  var imgurlLeft = 'http://topaz.iondune.net/coast/jpl-mursst/left_20160621-JPL-L4UHfnd-GLOB-v01-fv04-MUR.nc.png';
-  var tempOverlayLeft = new google.maps.GroundOverlay(imgurlLeft,imageBoundsLeft);
-  tempOverlayLeft.setMap(map);
-  var imgurlRight = 'http://topaz.iondune.net/coast/jpl-mursst/right_20160621-JPL-L4UHfnd-GLOB-v01-fv04-MUR.nc.png';
-  var tempOverlayRight = new google.maps.GroundOverlay(imgurlRight,imageBoundsRight);
-  tempOverlayRight.setMap(map);
+  var imgurl_base = 'http://topaz.iondune.net/coast/jpl-mursst/';
+  var imgurl_suffix = '-JPL-L4UHfnd-GLOB-v01-fv04-MUR.nc.png';
+
+  var imgurlLeft = imgurl_base + 'left_' + date + imgurl_suffix;
+  var imgurlRight = imgurl_base + 'right_' + date + imgurl_suffix;
+
+  overlayLeft = new google.maps.GroundOverlay(imgurlLeft,imageBoundsLeft);
+  overlayLeft.setMap(map);
+
+  overlayRight = new google.maps.GroundOverlay(imgurlRight,imageBoundsRight);
+  overlayRight.setMap(map);
 }
 
 // function readReceiverFile(file) {
