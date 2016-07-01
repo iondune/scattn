@@ -1,9 +1,11 @@
 <!DOCTYPE html>
+<head>
+<title>Calendar</title>
 <meta charset="utf-8">
 <style>
 
 body {
-  padding: 20px;
+  padding-left: 20px;
   font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
 }
 
@@ -40,12 +42,14 @@ body {
 .q10-11{fill:rgb(0,104,55)}
 
 </style>
+</head>
 <body>
 
 <h1>Tracker Calendar</h1>
 
 <p>Shows the total number of hits across all receivers.<p>
 <p>Click on a day to see a detailed report for that day</p>
+<p><a href="index.php">&lt;&lt; Back to Map</a></p>
 
 <script src="//d3js.org/d3.v3.min.js"></script>
 

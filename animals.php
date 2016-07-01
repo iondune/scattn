@@ -1,7 +1,10 @@
+<!DOCTYPE html>
 <html>
 <head>
+<title>Animal List</title>
 <style>
 body {
+  padding-left: 20px;
   font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
 }
 table {
@@ -20,6 +23,9 @@ tr:nth-child(even) {background-color: #f2f2f2}
 </head>
 <body>
 
+<h1>Full Animal List</h1>
+<p><a href="index.php">&lt;&lt; Back to Map</a></p>
+
 <?php
 include("dbconnect.php");
 
@@ -30,11 +36,12 @@ if ($result->num_rows > 0)
 {
 ?>
 <table>
-<tr><th>id</th><th>Common Name</th><th>Gender</th><th>Report Count</th></tr>
+<tr><th>id</th><th>Common Name</th><th>Gender</th><th>Report Count</th><th>View On Map</th></tr>
 <?php
   while($row = $result->fetch_assoc())
   {
-    echo "<tr><td>" . $row["id"]. "</td><td>" . $row["common_name"]. "</td><td>" . $row["gender"] . "</td><td>" . $row["count"]. "</td></tr>";
+    echo "<tr><td>" . $row["id"]. "</td><td>" . $row["common_name"]. "</td><td>" . $row["gender"] . "</td><td>" . $row["count"] .
+    "</td><td><a href=\"http://ruby.iondune.net/coast/scattn/index.php?track=" . $row["id"] . "\">View On Map</a></td></tr>";
   }
 ?>
 </table>

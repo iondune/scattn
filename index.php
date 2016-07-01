@@ -22,7 +22,7 @@
   <link rel="icon" type="image/png" href="img/favicon.png">
 </head>
 
-<body>
+<body <?php if (isset($_GET["track"])) echo "onload=loadAnimalPath(" . $_GET["track"] . ");"; ?>>
 
   <div id="header">
     <h1>SCATTN Animal Tracker</h1>
@@ -78,6 +78,18 @@
       <div>
         <button onclick="loadOverlays('20160621')">June 21, 2016</button>
       </div>
+      <div>&nbsp;</div>
+      <div>
+        <a href="animals.php">Full Animal List</a>
+      </div>
+      <div>
+        <a href="calendar.php">Calendar View</a>
+      </div>
+<?php if (isset($_GET["track"])) { ?>
+      <div>
+        <a href="index.php">Clear</a>
+      </div>
+<?php } ?>
     </div>
 
     <div id="googleMap" style="width:1024px;height:725px;"></div>
