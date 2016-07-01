@@ -21,7 +21,7 @@
   <link rel="icon" type="image/png" href="img/favicon.png">
 </head>
 
-<body onload="readTaggingFile('SCATTN_TaggingMetadata_JWS.csv')">
+<body onload="mysqlSharkPath()">
 
   <div id="header">
     <h1>SCATTN Animal Tracker</h1>
@@ -83,6 +83,7 @@
   </div>
 
   <?php include("receivers.php"); ?>
+  <?php include("animaltrack.php"); ?>
 
 </body>
 

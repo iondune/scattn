@@ -286,6 +286,18 @@ function drawSharkPath() {
     // }
 }
 
+function mysqlSharkPath() {
+  var sharkPath = new google.maps.Polyline({
+      path: animal_track,
+      geodesic: true,
+      strokeColor: "purple",
+      strokeOpacity: 1.0,
+      strokeWeight: 5
+  });
+
+  sharkPath.setMap(map);
+}
+
 markers = [];
 
 function hideReceivers() {
