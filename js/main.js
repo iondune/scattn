@@ -51,7 +51,15 @@ function initialize() {
   loadOverlays('20160621');
 }
 
+var currentOverlay = '';
+
+function showOverlay() {
+  loadOverlays(currentOverlay);
+}
+
 function loadOverlays(date) {
+
+  currentOverlay = date;
 
   var lastOverlayLeft = overlayLeft;
   var lastOverlayRight = overlayRight;
@@ -88,6 +96,17 @@ function loadOverlays(date) {
 
   if (lastOverlayRight != null) {
     lastOverlayRight.setMap(null);
+  }
+}
+
+function hideOverlay() {
+
+  if (overlayLeft != null) {
+    overlayLeft.setMap(null);
+  }
+
+  if (overlayRight != null) {
+    overlayRight.setMap(null);
   }
 }
 
@@ -265,4 +284,44 @@ function drawSharkPath() {
     //         map: map
     //     });
     // }
+}
+
+markers = [];
+
+function hideReceivers() {
+
+  for (var i = 0; i < markers.length; i++) {
+    markers[i].setMap(null);
+  }
+
+  markers = [];
+
+}
+
+function showReceivers() {
+
+  hideReceivers();
+
+  for (var i = 0; i < receivers_info.length; i++) {
+    var rec = receivers_info[i];
+
+    console.log("lat: %O, lng: %O [%O]", rec.lat, rec.lng, rec)
+
+    var marker = new google.maps.Marker({
+      position: { lat: rec.lat, lng: rec.lng },
+      icon: {
+        path: google.maps.SymbolPath.CIRCLE,
+        scale: 8,
+        fillColor: 'white',
+        fillOpacity: 0.25,
+        strokeColor: 'white',
+        strokeWeight: 1
+      },
+      draggable: false,
+      map: map
+    });
+
+    markers.push(marker);
+
+  }
 }

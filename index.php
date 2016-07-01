@@ -42,6 +42,24 @@
       <div class="spacer"></div>
 
       <div>
+        <button onclick="zoom()">Zoom in</button>
+      </div>
+      <p>Receivers</p>
+      <div>
+        <button onclick="showReceivers()">Show Receivers</button>
+      </div>
+      <div>
+        <button onclick="hideReceivers()">Hide Receivers</button>
+      </div>
+      <p>Sea Surface Temperature</p>
+      <div>
+        <button onclick="showOverlay()">Show SST Overlay</button>
+      </div>
+      <div>
+        <button onclick="hideOverlay()">Hide SST Overlay</button>
+      </div>
+      <div>&nbsp;</div>
+      <div>
         <button onclick="loadOverlays('20160616')">June 16, 2016</button>
       </div>
       <div>
@@ -59,13 +77,12 @@
       <div>
         <button onclick="loadOverlays('20160621')">June 21, 2016</button>
       </div>
-      <div>
-        <button onclick="zoom()">Zoom in</button>
-      </div>
     </div>
 
     <div id="googleMap" style="width:1024px;height:725px;"></div>
   </div>
+
+  <?php include("receivers.php"); ?>
 
 </body>
 

@@ -21,9 +21,6 @@ tr:nth-child(even) {background-color: #f2f2f2}
 <body>
 
 <?php
-ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);
-error_reporting(E_ALL);
 include("dbconnect.php");
 ?>
 
@@ -58,7 +55,6 @@ if ($stmt = $conn->prepare("SELECT receiver_id, count(*) AS hitcount FROM report
 else {
   echo "Could not prepare statement";
 }
-
 
 ?>
 
