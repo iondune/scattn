@@ -34,9 +34,9 @@
       <div class="dropdown">
         <button class="dropbtn">Choose Animal</button>
         <div id="myDropdown" class="dropdown-content" onchange="myFunction()">
-          <a href="javascript:void(0)" onclick="mysqlSharkPath(9);">Shark 9</a>
-          <a href="javascript:void(0)" onclick="mysqlSharkPath(12);">Shark 12</a>
-          <a href="javascript:void(0)" onclick="mysqlSharkPath(53);">Sheephead 53</a>
+          <a href="javascript:void(0)" onclick="loadAnimalPath(9);">Shark 9</a>
+          <a href="javascript:void(0)" onclick="loadAnimalPath(12);">Shark 12</a>
+          <a href="javascript:void(0)" onclick="loadAnimalPath(53);">Sheephead 53</a>
         </div>
       </div>
 
