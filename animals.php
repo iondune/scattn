@@ -1,7 +1,8 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-<title>Animal List</title>
+  <title>Animal List</title>
+  <link rel="icon" type="image/png" href="img/favicon.png">
 <style>
 body {
   padding-left: 20px;

@@ -1,5 +1,8 @@
-<html>
+<!DOCTYPE html>
+<html lang="en">
 <head>
+  <title>Day Details</title>
+  <link rel="icon" type="image/png" href="img/favicon.png">
 <style>
 body {
   font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;

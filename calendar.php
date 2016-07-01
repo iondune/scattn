@@ -1,7 +1,10 @@
 <!DOCTYPE html>
+<html lang="en">
+
 <head>
-<title>Calendar</title>
-<meta charset="utf-8">
+  <meta charset="utf-8">
+  <title>Calendar</title>
+  <link rel="icon" type="image/png" href="img/favicon.png">
 <style>
 
 body {
@@ -47,7 +50,7 @@ body {
 
 <h1>Tracker Calendar</h1>
 
-<p>Shows the total number of hits across all receivers.<p>
+<p>Shows the total number of hits across all receivers.</p>
 <p>Click on a day to see a detailed report for that day</p>
 <p><a href="index.php">&lt;&lt; Back to Map</a></p>
 
@@ -150,3 +153,6 @@ function monthPath(t0) {
 }
 
 </script>
+
+</body>
+</html>
