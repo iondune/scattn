@@ -100,6 +100,8 @@ function zoom() {
 
 function loadAnimalPath(animal_id) {
 
+  $("#loading").show();
+
   if (sharkPath != null) {
     sharkPath.setMap(null);
   }
@@ -144,7 +146,7 @@ function loadAnimalPath(animal_id) {
 
     }
 
-
+    $("#loading").hide();
   }});
 
 }

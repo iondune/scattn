@@ -24,6 +24,10 @@
 
 <body <?php if (isset($_GET["track"])) echo "onload=loadAnimalPath(" . $_GET["track"] . ");"; ?>>
 
+  <div id="loading" style="display: none;">
+    Loading ...
+  </div>
+
   <div id="header">
     <h1>SCATTN Animal Tracker</h1>
   </div>
