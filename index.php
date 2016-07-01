@@ -47,6 +47,10 @@
       <div class="spacer"></div>
 
       <div>
+        <a href="animals.php">Full Animal List</a>
+      </div>
+      <div>&nbsp;</div>
+      <div>
         <button onclick="zoom()">Zoom Out</button>
       </div>
       <p>Receivers</p>
@@ -83,9 +87,6 @@
         <button onclick="loadOverlays('20160621')">June 21, 2016</button>
       </div>
       <div>&nbsp;</div>
-      <div>
-        <a href="animals.php">Full Animal List</a>
-      </div>
       <div>
         <a href="calendar.php">Calendar View</a>
       </div>
