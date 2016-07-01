@@ -91,6 +91,15 @@ function loadOverlays(date) {
   }
 }
 
+function zoom() {
+  map.fitBounds({
+    north: 34.8,
+    south: 32.6,
+    east: -117.0,
+    west: -119.2
+  });
+}
+
 // function readReceiverFile(file) {
 //     var rawFile = new XMLHttpRequest();
 //     rawFile.open("GET", file, true);
