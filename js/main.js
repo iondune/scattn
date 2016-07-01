@@ -47,11 +47,9 @@ function initialize() {
   };
 
   map = new google.maps.Map(document.getElementById("googleMap"), mapProp);
-
-  loadOverlays('20160621');
 }
 
-var currentOverlay = '';
+var currentOverlay = '20160621';
 
 function showOverlay() {
   loadOverlays(currentOverlay);
@@ -112,10 +110,10 @@ function hideOverlay() {
 
 function zoom() {
   map.fitBounds({
-    north: 34.8,
-    south: 32.6,
-    east: -117.0,
-    west: -119.2
+    north: 37.0,
+    south: 18.0,
+    east: -115.0,
+    west: -121.2
   });
 }
 
@@ -288,46 +286,53 @@ function drawSharkPath() {
 
 var sharkPath = null;
 
-function mysqlSharkPath() {
+function mysqlSharkPath(animal_id) {
 
   if (sharkPath != null) {
     sharkPath.setMap(null);
   }
 
-  $.ajax({url: "animaltrack.php", success: function(result) {
+  $.ajax({url: "animaltrack.php?id=" + animal_id, success: function(result) {
     var animal_track = result;
+    var color = pathColors[25];
     sharkPath = new google.maps.Polyline({
         path: animal_track,
         geodesic: true,
-        strokeColor: "purple",
+        strokeColor: "#f3f",
         strokeOpacity: 1.0,
         strokeWeight: 5
     });
 
     sharkPath.setMap(map);
 
-    var north = 33.0;
-    var south = 33.0;
-    var east = -118.0;
-    var west = -118.0;
+    if (animal_track.length> 0) {
 
-    for (var i = 0; i < animal_track.length; i++) {
-      north = Math.max(north, animal_track[i].lat);
-      south = Math.min(south, animal_track[i].lat);
-      east = Math.max(east, animal_track[i].lng);
-      west = Math.min(west, animal_track[i].lng);
+      var north = animal_track[0].lat;
+      var south = animal_track[0].lat;
+      var east = animal_track[0].lng;
+      var west = animal_track[0].lng;
+
+      for (var i = 1; i < animal_track.length; i++) {
+        north = Math.max(north, animal_track[i].lat);
+        south = Math.min(south, animal_track[i].lat);
+        east = Math.max(east, animal_track[i].lng);
+        west = Math.min(west, animal_track[i].lng);
+      }
+
+      console.log("bounds: %f %f %f %f", north, south, east, west);
+
+      var lat_boundary_size = Math.min(0.15, (north - south));
+      var lng_boundary_size = Math.min(0.15, (east - west));
+
+      map.fitBounds({
+        north: north + lat_boundary_size,
+        south: south - lat_boundary_size,
+        east: east + lng_boundary_size,
+        west: west - lng_boundary_size
+      });
+
     }
 
-    console.log("bounds: %f %f %f %f", north, south, east, west);
-
-    var boundary_size = 0.15;
-
-    map.fitBounds({
-      north: north + boundary_size,
-      south: south - boundary_size,
-      east: east + boundary_size,
-      west: west - boundary_size
-    });
 
   }});
 

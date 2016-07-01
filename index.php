@@ -32,18 +32,18 @@
 
     <div id="sidebar">
       <div class="dropdown">
-        <button class="dropbtn">Choose a Shark</button>
+        <button class="dropbtn">Choose Animal</button>
         <div id="myDropdown" class="dropdown-content" onchange="myFunction()">
-          <a href="javascript:void(0)" onclick="mysqlSharkPath();">Shark 1</a>
-          <a href="javascript:void(0)" onclick="mysqlSharkPath();">Shark 2</a>
-          <a href="javascript:void(0)" onclick="mysqlSharkPath();">Shark 3</a>
+          <a href="javascript:void(0)" onclick="mysqlSharkPath(9);">Shark 9</a>
+          <a href="javascript:void(0)" onclick="mysqlSharkPath(12);">Shark 12</a>
+          <a href="javascript:void(0)" onclick="mysqlSharkPath(53);">Sheephead 53</a>
         </div>
       </div>
 
       <div class="spacer"></div>
 
       <div>
-        <button onclick="zoom()">Zoom in</button>
+        <button onclick="zoom()">Zoom Out</button>
       </div>
       <p>Receivers</p>
       <div>
