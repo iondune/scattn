@@ -286,16 +286,27 @@ function drawSharkPath() {
     // }
 }
 
-function mysqlSharkPath() {
-  var sharkPath = new google.maps.Polyline({
-      path: animal_track,
-      geodesic: true,
-      strokeColor: "purple",
-      strokeOpacity: 1.0,
-      strokeWeight: 5
-  });
+var sharkPath = null;
 
-  sharkPath.setMap(map);
+function mysqlSharkPath() {
+
+  if (sharkPath != null) {
+    sharkPath.setMap(null);
+  }
+
+  $.ajax({url: "animaltrack.php", success: function(result) {
+    var animal_track = result;
+    sharkPath = new google.maps.Polyline({
+        path: animal_track,
+        geodesic: true,
+        strokeColor: "purple",
+        strokeOpacity: 1.0,
+        strokeWeight: 5
+    });
+
+    sharkPath.setMap(map);
+  }});
+
 }
 
 markers = [];

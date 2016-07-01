@@ -83,8 +83,6 @@
     <div id="googleMap" style="width:1024px;height:725px;"></div>
   </div>
 
-  <?php include("animaltrack.php"); ?>
-
 </body>
 
 </html>

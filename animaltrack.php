@@ -1,11 +1,6 @@
 <?php
 include("dbconnect.php");
-?>
-<script>
 
-  var animal_track =
-
-<?php
 $sql = "SELECT animal.id, lat, lng, report_dt from animal inner join report_history on animal.id=animal_id inner join receiver on receiver.id=receiver_id where animal.id=12 order by report_dt";
 $result = $conn->query($sql);
 
@@ -24,7 +19,6 @@ if ($result->num_rows > 0)
   }
 }
 
+header('Content-type: application/json');
 echo json_encode($lines);
 ?>
-;
-</script>
