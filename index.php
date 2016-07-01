@@ -14,6 +14,7 @@
   <link rel="stylesheet" href="css/dropdown.css">
 
   <!-- SCRIPTS -->
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.0.0/jquery.min.js"></script>
   <script type="text/javascript" src="js/main.js"></script>
   <script async defer src="http://maps.googleapis.com/maps/api/js?key=AIzaSyCMIhlsl_XZkBvxLfNSXeOzRBOQ-WwjGXU&callback=initialize"></script>
 
@@ -82,7 +83,6 @@
     <div id="googleMap" style="width:1024px;height:725px;"></div>
   </div>
 
-  <?php include("receivers.php"); ?>
   <?php include("animaltrack.php"); ?>
 
 </body>

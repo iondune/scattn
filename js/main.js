@@ -314,26 +314,32 @@ function showReceivers() {
 
   hideReceivers();
 
-  for (var i = 0; i < receivers_info.length; i++) {
-    var rec = receivers_info[i];
+  $.ajax({url: "receivers.php", success: function(result) {
 
-    console.log("lat: %O, lng: %O [%O]", rec.lat, rec.lng, rec)
+    var receivers_info = result;
+    for (var i = 0; i < receivers_info.length; i++) {
+      var rec = receivers_info[i];
 
-    var marker = new google.maps.Marker({
-      position: { lat: rec.lat, lng: rec.lng },
-      icon: {
-        path: google.maps.SymbolPath.CIRCLE,
-        scale: 8,
-        fillColor: 'white',
-        fillOpacity: 0.25,
-        strokeColor: 'white',
-        strokeWeight: 1
-      },
-      draggable: false,
-      map: map
-    });
+      console.log("lat: %O, lng: %O [%O]", rec.lat, rec.lng, rec)
 
-    markers.push(marker);
+      var marker = new google.maps.Marker({
+        position: { lat: rec.lat, lng: rec.lng },
+        icon: {
+          path: google.maps.SymbolPath.CIRCLE,
+          scale: 8,
+          fillColor: 'white',
+          fillOpacity: 0.25,
+          strokeColor: 'white',
+          strokeWeight: 1
+        },
+        draggable: false,
+        map: map
+      });
 
-  }
+      markers.push(marker);
+
+    }
+
+  }});
+
 }
