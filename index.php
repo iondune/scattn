@@ -22,7 +22,7 @@
   <link rel="icon" type="image/png" href="img/favicon.png">
 </head>
 
-<body onload="mysqlSharkPath()">
+<body>
 
   <div id="header">
     <h1>SCATTN Animal Tracker</h1>
@@ -34,9 +34,9 @@
       <div class="dropdown">
         <button class="dropbtn">Choose a Shark</button>
         <div id="myDropdown" class="dropdown-content" onchange="myFunction()">
-          <a href="#">Shark 1</a>
-          <a href="#">Shark 2</a>
-          <a href="#">Shark 3</a>
+          <a href="javascript:void(0)" onclick="mysqlSharkPath();">Shark 1</a>
+          <a href="javascript:void(0)" onclick="mysqlSharkPath();">Shark 2</a>
+          <a href="javascript:void(0)" onclick="mysqlSharkPath();">Shark 3</a>
         </div>
       </div>
 

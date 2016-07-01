@@ -305,6 +305,30 @@ function mysqlSharkPath() {
     });
 
     sharkPath.setMap(map);
+
+    var north = 33.0;
+    var south = 33.0;
+    var east = -118.0;
+    var west = -118.0;
+
+    for (var i = 0; i < animal_track.length; i++) {
+      north = Math.max(north, animal_track[i].lat);
+      south = Math.min(south, animal_track[i].lat);
+      east = Math.max(east, animal_track[i].lng);
+      west = Math.min(west, animal_track[i].lng);
+    }
+
+    console.log("bounds: %f %f %f %f", north, south, east, west);
+
+    var boundary_size = 0.15;
+
+    map.fitBounds({
+      north: north + boundary_size,
+      south: south - boundary_size,
+      east: east + boundary_size,
+      west: west - boundary_size
+    });
+
   }});
 
 }
