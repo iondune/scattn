@@ -20,6 +20,9 @@ table, th, td {
   padding: 6px;
 }
 tr:nth-child(even) {background-color: #f2f2f2}
+td.right {
+  text-align: right;
+}
 </style>
 </head>
 <body>
@@ -41,7 +44,7 @@ if ($result->num_rows > 0)
 <?php
   while($row = $result->fetch_assoc())
   {
-    echo "<tr><td>" . $row["id"]. "</td><td>" . $row["common_name"]. "</td><td>" . $row["gender"] . "</td><td>" . $row["count"] .
+    echo "<tr><td>" . $row["id"]. "</td><td>" . $row["common_name"]. "</td><td>" . $row["gender"] . "</td><td class=\"right\">" . number_format($row["count"], 0) .
     "</td><td><a href=\"http://ruby.iondune.net/coast/scattn/index.php?track=" . $row["id"] . "\">View On Map</a></td></tr>";
   }
 ?>
