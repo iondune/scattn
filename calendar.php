@@ -3,13 +3,22 @@
 <style>
 
 body {
-  font: 10px sans-serif;
+  padding: 20px;
+  font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+}
+
+#calendar, #key {
+  font: 11px sans-serif;
   shape-rendering: crispEdges;
 }
 
 .day {
   fill: #fff;
   stroke: #ccc;
+}
+
+.day-data {
+  cursor: pointer;
 }
 
 .month {
@@ -35,6 +44,9 @@ body {
 
 <h1>Tracker Calendar</h1>
 
+<p>Shows the total number of hits across all receivers.<p>
+<p>Click on a day to see a detailed report for that day</p>
+
 <script src="//d3js.org/d3.v3.min.js"></script>
 
 
@@ -42,7 +54,8 @@ body {
 
 <?php include("datecounts.php"); ?>
 
-<svg height="350" width="200" style="position: fixed; left: 960px;">
+<div id="key">
+<svg height="350" width="200" style="position: fixed; left: 1000px;">
   <g transform="translate(29.5,16)">
     <text style="text-anchor: middle;" transform="translate(-16,12)">Key</text>
 
@@ -60,6 +73,7 @@ body {
 
   </g>
 </svg>
+</div>
 
 <div id="calendar"></div>
 
@@ -77,7 +91,7 @@ var color = d3.scale.quantize()
     .range(d3.range(11).map(function(d) { return "q" + d + "-11"; }));
 
 var svg = d3.select("#calendar").selectAll("svg")
-    .data(d3.range(2010, 2016))
+    .data(d3.range(2010, 2017))
   .enter().append("svg")
     .attr("width", width)
     .attr("height", height)
@@ -115,7 +129,8 @@ var data = d3.nest()
   .map(dtinln);
 
 rect.filter(function(d) { return d in data; })
-    .attr("class", function(d) { return "day " + color(data[d]); })
+    .attr("class", function(d) { return "day day-data " + color(data[d]); })
+    .attr("onclick", function(d) { return "window.location = 'daydetails.php?d=" + d + "';" })
   .select("title")
     .text(function(d) { return d + ": " + data[d]; });
 
