@@ -29,6 +29,7 @@
   </div>
 
   <div id="header">
+    <img style="float: left; margin-top: 1.4em; margin-right: 20px; margin-left: 10px;" src="img/scattn.gif" />
     <h1>SCATTN Animal Tracker</h1>
   </div>
 
