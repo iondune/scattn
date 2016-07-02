@@ -6,7 +6,7 @@ var overlayRight = null;
 
 var currentOverlay = '20160621';
 
-var sharkPath = null;
+var sharkPathMarkers = [];
 
 var markers = [];
 
@@ -98,27 +98,53 @@ function zoom() {
   });
 }
 
+function hideAnimalPath() {
+
+  for (var i = 0; i < sharkPathMarkers.length; i++) {
+    sharkPathMarkers[i].setMap(null);
+  }
+
+  sharkPathMarkers = [];
+
+}
+
 function loadAnimalPath(animal_id) {
 
   $("#loading").show();
 
-  if (sharkPath != null) {
-    sharkPath.setMap(null);
-  }
+  hideAnimalPath();
 
   $.ajax({url: "animaltrack.php?id=" + animal_id, success: function(result) {
+
     var animal_track = result;
-    sharkPath = new google.maps.Polyline({
-        path: animal_track,
-        geodesic: true,
-        strokeColor: "#f3f",
-        strokeOpacity: 1.0,
-        strokeWeight: 5
-    });
+    for (var i = 0; i < animal_track.length; i++) {
+      var rec = animal_track[i];
 
-    sharkPath.setMap(map);
+      if (! rec.old) {
+        var marker = new google.maps.Marker({
+          position: { lat: rec.lat, lng: rec.lng },
+          icon: {
+            path: google.maps.SymbolPath.CIRCLE,
+            scale: 12,
+            fillColor: '#f3f',
+            fillOpacity: 0.15,
+            strokeColor: '#f3f',
+            strokeWeight: 1
+          },
+          draggable: false,
+          map: map
+        });
 
-    if (animal_track.length> 0) {
+        sharkPathMarkers.push(marker);
+      }
+      else {
+        // console.log("Skipped a duplicate receiver");
+      }
+
+
+    }
+
+    if (animal_track.length > 0) {
 
       var north = animal_track[0].lat;
       var south = animal_track[0].lat;
@@ -132,7 +158,7 @@ function loadAnimalPath(animal_id) {
         west = Math.min(west, animal_track[i].lng);
       }
 
-      console.log("bounds: %f %f %f %f", north, south, east, west);
+      // console.log("bounds: %f %f %f %f", north, south, east, west);
 
       var lat_boundary_size = Math.min(0.15, (north - south));
       var lng_boundary_size = Math.min(0.15, (east - west));
@@ -171,7 +197,7 @@ function showReceivers() {
     for (var i = 0; i < receivers_info.length; i++) {
       var rec = receivers_info[i];
 
-      console.log("lat: %O, lng: %O [%O]", rec.lat, rec.lng, rec)
+      // console.log("lat: %O, lng: %O [%O]", rec.lat, rec.lng, rec);
 
       var marker = new google.maps.Marker({
         position: { lat: rec.lat, lng: rec.lng },
