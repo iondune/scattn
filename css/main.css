@@ -20,6 +20,7 @@ body, button, h1, h2, h3, h4, h5 {
 #sidebar {
   float: left;
   margin-right: 20px;
+  width: 180px;
 }
 
 #main {
@@ -47,4 +48,15 @@ body, button, h1, h2, h3, h4, h5 {
 
   padding-top: 200px;
   text-align: center;
+}
+
+#bottom-control {
+  width: 1184px;
+  background-color: #A5BBC9;
+  padding: 20px;
+  margin-top: 20px;
+}
+
+#date-range {
+  margin-top: 0;
 }

@@ -12,10 +12,13 @@
   <!-- CSS -->
   <link rel="stylesheet" href="css/main.css">
   <link rel="stylesheet" href="css/dropdown.css">
+  <link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
 
   <!-- SCRIPTS -->
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.0.0/jquery.min.js"></script>
   <script type="text/javascript" src="js/main.js"></script>
+  <script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/datejs/1.0/date.min.js"></script>
   <script async defer src="http://maps.googleapis.com/maps/api/js?key=AIzaSyCMIhlsl_XZkBvxLfNSXeOzRBOQ-WwjGXU&callback=initialize"></script>
 
   <!-- FAVICON -->
@@ -99,6 +102,12 @@
     </div>
 
     <div id="googleMap" style="width:1024px;height:725px;"></div>
+
+    <div id="bottom-control">
+      <p id="date-range">&nbsp;</p>
+      <p id="date-display">&nbsp;</p>
+      <div id="slider"></div>
+    </div>
   </div>
 
 </body>

@@ -7,9 +7,13 @@ var overlayRight = null;
 var currentOverlay = '20160621';
 
 var sharkPathMarkers = [];
+var sharkPathLines = [];
 
 var markers = [];
+var dateFormat = 'd-MMM-yyyy';
+var currentStartDate = new Date("2014-10-13 13:34:10");
 
+var dayBuckets = [];
 
 function initialize() {
   var mapProp = {
@@ -31,6 +35,22 @@ function initialize() {
 
   map = new google.maps.Map(document.getElementById("googleMap"), mapProp);
 }
+
+function addDays(date, days) {
+  var result = new Date(date);
+  result.setDate(result.getDate() + days);
+  return result;
+}
+
+$(document).ready(function() {
+  $("#slider").slider({
+    slide: function( event, ui ) {
+      $("#date-display").text("Current date: " + addDays(currentStartDate, ui.value).toString('d-MMM-yyyy'));
+      showDay(ui.value);
+    },
+    disabled: true
+  });
+});
 
 function showOverlay() {
   loadOverlays(currentOverlay);
@@ -108,6 +128,56 @@ function hideAnimalPath() {
 
 }
 
+function stripTime(d) {
+  return new Date(d.getFullYear(), d.getMonth(), d.getDate());
+}
+
+function daysBetween(date1, date2) {
+
+    // The number of milliseconds in one day
+    var ONE_DAY = 1000 * 60 * 60 * 24
+
+    // Convert both dates to milliseconds
+    var date1_ms = date1.getTime()
+    var date2_ms = date2.getTime()
+
+    // Calculate the difference in milliseconds
+    var difference_ms = Math.abs(date1_ms - date2_ms)
+
+    // Convert back to days and return
+    return Math.round(difference_ms/ONE_DAY)
+
+}
+
+var lastDay = -1;
+
+function showDay(day) {
+  if (lastDay >= 0) {
+    // console.log("unsetting the last day %d", lastDay);
+    for (var i = 0; i < dayBuckets[lastDay].length; ++ i) {
+      var thing = dayBuckets[lastDay][i];
+      if (thing instanceof google.maps.Marker) {
+        thing.getIcon().scale = 2;
+        thing.setMap(map);
+      }
+      else if (thing instanceof google.maps.Polyline) {
+        thing.setMap(null);
+      }
+    }
+  }
+  for (var i = 0; i < dayBuckets[day].length; ++ i) {
+      var thing = dayBuckets[day][i];
+      if (thing instanceof google.maps.Marker) {
+        thing.getIcon().scale = 12;
+        thing.setMap(map);
+      }
+      else if (thing instanceof google.maps.Polyline) {
+        thing.setMap(map);
+      }
+  }
+  lastDay = day;
+}
+
 function loadAnimalPath(animal_id) {
 
   $("#loading").show();
@@ -116,33 +186,78 @@ function loadAnimalPath(animal_id) {
 
   $.ajax({url: "animaltrack.php?id=" + animal_id, success: function(result) {
 
+    var minDate = null;
+    var maxDate = null;
+
     var animal_track = result;
+    var lastNode = null;
     for (var i = 0; i < animal_track.length; i++) {
       var rec = animal_track[i];
 
-      if (! rec.old) {
-        var marker = new google.maps.Marker({
-          position: { lat: rec.lat, lng: rec.lng },
-          icon: {
-            path: google.maps.SymbolPath.CIRCLE,
-            scale: 12,
-            fillColor: '#f3f',
-            fillOpacity: 0.15,
-            strokeColor: '#f3f',
-            strokeWeight: 1
-          },
-          draggable: false,
-          map: map
-        });
-
-        sharkPathMarkers.push(marker);
+      var d = stripTime(Date.parse(rec.report_dt));
+      if (minDate === null || d.compareTo(minDate) == -1) {
+        minDate = d;
       }
-      else {
-        // console.log("Skipped a duplicate receiver");
+      if (maxDate === null || d.compareTo(maxDate) == 1) {
+        maxDate = d;
       }
-
-
     }
+
+    $("#date-range").text("Data ranges from " + minDate.toString(dateFormat) + " to " + maxDate.toString(dateFormat));
+    var days = daysBetween(minDate, maxDate);
+    currentStartDate = minDate;
+    $("#slider").slider("enable");
+    $("#slider").slider("option", "max", days);
+    $("#date-display").text("Current date: " + currentStartDate.toString('d-MMM-yyyy'));
+    console.log("There are %d days between", days);
+
+    dayBuckets = [];
+    dayBuckets.length += days + 1;
+
+    for (var i = 0; i < dayBuckets.length; ++ i) {
+      dayBuckets[i] = [];
+    }
+
+    for (var i = 0; i < animal_track.length; i++) {
+      var rec = animal_track[i];
+      var thisNode = { lat: rec.lat, lng: rec.lng };
+
+      var day = daysBetween(minDate, stripTime(Date.parse(rec.report_dt)));
+
+      var marker = new google.maps.Marker({
+        position: { lat: rec.lat, lng: rec.lng },
+        icon: {
+          path: google.maps.SymbolPath.CIRCLE,
+          scale: 2,
+          fillColor: '#f3f',
+          fillOpacity: 0.15,
+          strokeColor: '#f3f',
+          strokeWeight: 1
+        },
+        draggable: false,
+        map: map
+      });
+
+      sharkPathMarkers.push(marker);
+      // console.log("add days at %O, %O", day, dayBuckets[day]);
+      dayBuckets[day].push(marker);
+
+      if (lastNode !== null && (lastNode.lng != thisNode.lng || lastNode.lat != thisNode.lat)) {
+        sharkPath = new google.maps.Polyline({
+          path: [lastNode, thisNode],
+          geodesic: true,
+          strokeColor: "#f3f",
+          strokeOpacity: 1.0,
+          strokeWeight: 5
+        });
+        // console.log("add days at %O, %O", day, dayBuckets[day]);
+        dayBuckets[day].push(sharkPath);
+      }
+
+      lastNode = thisNode;
+    }
+
+    showDay(0);
 
     if (animal_track.length > 0) {
 
