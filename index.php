@@ -104,6 +104,10 @@
     <div id="googleMap" style="width:1024px;height:725px;"></div>
 
     <div id="bottom-control">
+      <div style="float: right;">
+        <button onclick="startPlayback()">Play</button>
+        <button onclick="stopPlayback()">Stop</button>
+      </div>
       <p id="date-range">&nbsp;</p>
       <p id="date-display">&nbsp;</p>
       <div id="slider"></div>

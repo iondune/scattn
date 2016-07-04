@@ -14,6 +14,7 @@ var dateFormat = 'd-MMM-yyyy';
 var currentStartDate = new Date("2014-10-13 13:34:10");
 
 var dayBuckets = [];
+var numDays = 0;
 
 function initialize() {
   var mapProp = {
@@ -149,7 +150,34 @@ function daysBetween(date1, date2) {
 
 }
 
+var interval = null;
+
+function startPlayback() {
+  if (interval !== null) {
+    clearInterval(interval);
+  }
+
+  interval = setInterval(advanceDay, 750);
+}
+
+function stopPlayback() {
+  if (interval !== null) {
+    clearInterval(interval);
+  }
+
+  interval = null;
+}
+
 var lastDay = -1;
+
+function advanceDay() {
+  var newDay = lastDay + 1;
+  if (newDay < numDays) {
+    showDay(newDay);
+    $("#slider").slider("option", "value", newDay);
+    $("#date-display").text("Current date: " + addDays(currentStartDate, newDay).toString('d-MMM-yyyy'));
+  }
+}
 
 function showDay(day) {
   if (lastDay >= 0) {
@@ -163,7 +191,9 @@ function showDay(day) {
       var path = dayBuckets[lastDay].currentPaths[i];
       path.setMap(null);
     }
-    dayBuckets[lastDay].futurePath.setMap(null);
+    if (dayBuckets[lastDay].futurePath !== null) {
+      dayBuckets[lastDay].futurePath.setMap(null);
+    }
   }
 
   for (var i = 0; i < dayBuckets[day].activeMarkers.length; ++ i) {
@@ -173,9 +203,11 @@ function showDay(day) {
   }
   for (var i = 0; i < dayBuckets[day].currentPaths.length; ++ i) {
     var path = dayBuckets[day].currentPaths[i];
-    path.setMap(map);
+    // path.setMap(map);
   }
-  dayBuckets[day].futurePath.setMap(map);
+  if (dayBuckets[day].futurePath !== null) {
+    dayBuckets[day].futurePath.setMap(map);
+  }
 
   lastDay = day;
 }
@@ -230,6 +262,7 @@ function loadAnimalPath(animal_id) {
     console.log("There are %d days between", days);
 
     dayBuckets = [];
+    numDays = days;
     dayBuckets.length += days + 1;
 
     for (var i = 0; i < dayBuckets.length; ++ i) {
@@ -276,12 +309,15 @@ function loadAnimalPath(animal_id) {
         var solidPath = new google.maps.Polyline({
           path: [lastNode, thisNode],
           geodesic: true,
-          strokeOpacity: 0,
-          icons: [{
-            icon: lineSymbolFilled,
-            offset: '0',
-            repeat: '20px'
-          }],
+          // strokeOpacity: 0,
+          strokeOpacity: 0.85,
+          strokeColor: "#f3f",
+          strokeWeight: 1.0
+          // icons: [{
+          //   icon: lineSymbolFilled,
+          //   offset: '0',
+          //   repeat: '20px'
+          // }],
         });
         dayBuckets[rec.dayIndex].currentPaths.push(solidPath);
       }
@@ -321,8 +357,10 @@ function loadAnimalPath(animal_id) {
       if (dayBuckets[i].futurePath === null) {
         dayBuckets[i].futurePath = lastFuturePath;
       }
-
-      lastFuturePath = dayBuckets[i].futurePath;
+      else {
+        lastFuturePath = dayBuckets[i].futurePath;
+        dayBuckets[i].futurePath = null;
+      }
     }
 
     showDay(0);
