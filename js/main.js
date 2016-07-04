@@ -267,7 +267,7 @@ function loadAnimalPath(animal_id) {
     console.log("There are %d days between", days);
 
     dayBuckets = [];
-    numDays = days;
+    numDays = days + 1;
     dayBuckets.length += days + 1;
 
     for (var i = 0; i < dayBuckets.length; ++ i) {
