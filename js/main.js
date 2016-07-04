@@ -177,6 +177,9 @@ function advanceDay() {
     $("#slider").slider("option", "value", newDay);
     $("#date-display").text("Current date: " + addDays(currentStartDate, newDay).toString('d-MMM-yyyy'));
   }
+  else {
+    stopPlayback();
+  }
 }
 
 function showDay(day) {
@@ -216,6 +219,7 @@ function loadAnimalPath(animal_id) {
 
   $("#loading").show();
 
+  stopPlayback();
   hideAnimalPath();
 
   $.ajax({url: "animaltrack.php?id=" + animal_id, success: function(result) {
@@ -257,6 +261,7 @@ function loadAnimalPath(animal_id) {
     var days = daysBetween(minDate, maxDate);
     currentStartDate = minDate;
     $("#slider").slider("enable");
+    $("#slider").slider("option", "value", 0);
     $("#slider").slider("option", "max", days);
     $("#date-display").text("Current date: " + currentStartDate.toString('d-MMM-yyyy'));
     console.log("There are %d days between", days);
