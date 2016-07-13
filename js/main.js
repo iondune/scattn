@@ -182,27 +182,17 @@ function advanceDay() {
   }
 }
 
+function setMarkerOpacity(marker, fill, stroke) {
+  icon = marker.getIcon();
+  icon.fillOpacity = fill;
+  icon.strokeOpacity = stroke;
+  marker.setIcon(icon);
+}
+
 function showDay(day) {
 
-  var lineSymbolFull = {
-    path: google.maps.SymbolPath.FORWARD_CLOSED_ARROW,
-    scale: 2.75,
-    fillColor: '#2ee',
-    fillOpacity: 0.5,
-    strokeOpacity: 0.85,
-    strokeColor: "#3ff",
-    strokeWeight: 1.25
-  };
-
-  var lineSymbolHalf = {
-    path: google.maps.SymbolPath.FORWARD_CLOSED_ARROW,
-    scale: 2.5,
-    fillColor: '#2ee',
-    fillOpacity: 0.2,
-    strokeOpacity: 0.35,
-    strokeColor: "#3ff",
-    strokeWeight: 1.25
-  };
+  const fillOpacity = 0.5;
+  const strokeOpacity = 0.85;
 
   if (lastDay >= 0) {
     for (var i = 0; i < dayBuckets[lastDay].activeMarkers.length; ++ i) {
@@ -211,16 +201,17 @@ function showDay(day) {
       marker.setMap(map);
     }
     if (dayBuckets[lastDay].futurePath !== null) {
-      dayBuckets[lastDay].futurePath.setOptions({
-          icons: [{
-            icon: lineSymbolHalf,
-            offset: '20px',
-            repeat: '20px'
-          }]});
-      var deleteMe = dayBuckets[lastDay].futurePath;
+      var lastStep = dayBuckets[lastDay].futurePath;
+      setMarkerOpacity(lastStep, fillOpacity * 0.75, strokeOpacity * 0.75);
       setTimeout(function() {
-        deleteMe.setMap(null);
-      }, 400);
+        setMarkerOpacity(lastStep, fillOpacity * 0.5, strokeOpacity * 0.5);
+      }, 150);
+      setTimeout(function() {
+        setMarkerOpacity(lastStep, fillOpacity * 0.25, strokeOpacity * 0.25);
+      }, 300);
+      setTimeout(function() {
+        lastStep.setMap(null);
+      }, 450);
     }
   }
 
@@ -230,7 +221,18 @@ function showDay(day) {
     marker.setMap(map);
   }
   if (dayBuckets[day].futurePath !== null) {
-    dayBuckets[day].futurePath.setMap(map);
+    var thisStep = dayBuckets[day].futurePath;
+    thisStep.setMap(map);
+    setMarkerOpacity(thisStep, fillOpacity * 0.25, strokeOpacity * 0.25);
+    setTimeout(function() {
+      setMarkerOpacity(thisStep, fillOpacity * 0.5, strokeOpacity * 0.5);
+    }, 150);
+    setTimeout(function() {
+      setMarkerOpacity(thisStep, fillOpacity * 0.75, strokeOpacity * 0.75);
+    }, 300);
+    setTimeout(function() {
+      setMarkerOpacity(thisStep, fillOpacity, strokeOpacity);
+    }, 450);
   }
 
   lastDay = day;
@@ -413,28 +415,40 @@ function loadAnimalPath(animal_id) {
         var totalDays = dayBuckets[i].nextRecord.dayIndex - dayBuckets[i].previousRecord.dayIndex - 1;
         var currLatLng = makeLatLngSegment(prevLatLng, nextLatLng, daysIn, totalDays);
 
-        var lineSymbol = {
-          path: google.maps.SymbolPath.FORWARD_CLOSED_ARROW,
-          scale: 2.75,
-          fillColor: '#2ee',
-          fillOpacity: 0.5,
-          strokeOpacity: 0.85,
-          strokeColor: "#3ff",
-          strokeWeight: 1.25
-        };
+        // var lineSymbol = {
+        //   path: google.maps.SymbolPath.FORWARD_CLOSED_ARROW,
+        //   scale: 2.75,
+        //   fillColor: '#2ee',
+        //   fillOpacity: 0.5,
+        //   strokeOpacity: 0.85,
+        //   strokeColor: "#3ff",
+        //   strokeWeight: 1.25
+        // };
 
-        var dottedPath = new google.maps.Polyline({
-          path: currLatLng,
-          geodesic: true,
-          strokeOpacity: 0,
-          icons: [{
-            icon: lineSymbol,
-            offset: '20px',
-            repeat: '20px'
-          }],
+        // var dottedPath = new google.maps.Polyline({
+        //   path: currLatLng,
+        //   geodesic: true,
+        //   strokeOpacity: 0,
+        //   icons: [{
+        //     icon: lineSymbol,
+        //     offset: '20px',
+        //     repeat: '20px'
+        //   }],
+        // });
+
+        var marker = new google.maps.Marker({
+          position: currLatLng[0],
+          icon: {
+            path: google.maps.SymbolPath.FORWARD_CLOSED_ARROW,
+            scale: 3.5,
+            fillColor: '#3ff',
+            strokeWeight: 1.0,
+            strokeColor: "#3ff"
+          },
+          draggable: false
         });
 
-        dayBuckets[i].futurePath = dottedPath;
+        dayBuckets[i].futurePath = marker;
       }
 
     }
