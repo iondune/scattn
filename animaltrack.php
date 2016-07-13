@@ -18,6 +18,7 @@ if ($stmt = $conn->prepare("SELECT animal.id, lat, lng, report_dt, receiver_id f
           "lat"=>floatval($row["lat"]),
           "lng"=>floatval($row["lng"]),
           "report_dt"=>$row["report_dt"],
+          "receiver_id"=>$row["receiver_id"],
           "old"=>$new
           );
 

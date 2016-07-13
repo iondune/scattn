@@ -190,10 +190,6 @@ function showDay(day) {
       marker.getIcon().scale = 2;
       marker.setMap(map);
     }
-    for (var i = 0; i < dayBuckets[lastDay].currentPaths.length; ++ i) {
-      var path = dayBuckets[lastDay].currentPaths[i];
-      path.setMap(null);
-    }
     if (dayBuckets[lastDay].futurePath !== null) {
       dayBuckets[lastDay].futurePath.setMap(null);
     }
@@ -204,15 +200,27 @@ function showDay(day) {
     marker.getIcon().scale = 12;
     marker.setMap(map);
   }
-  for (var i = 0; i < dayBuckets[day].currentPaths.length; ++ i) {
-    var path = dayBuckets[day].currentPaths[i];
-    // path.setMap(map);
-  }
   if (dayBuckets[day].futurePath !== null) {
     dayBuckets[day].futurePath.setMap(map);
   }
 
   lastDay = day;
+}
+
+if (!Array.prototype.last){
+    Array.prototype.last = function(){
+        return this[this.length - 1];
+    };
+};
+
+function makeLatLngSegment(prev, next, days, total) {
+  var extent = { lat: next.lat - prev.lat, lng: next.lng - prev.lng };
+  var oneDay = { lat: extent.lat / total, lng: extent.lng / total };
+
+  return [
+    { lat: prev.lat + oneDay.lat * days,       lng: prev.lng + oneDay.lng * days },
+    { lat: prev.lat + oneDay.lat * (days + 1), lng: prev.lng + oneDay.lng * (days + 1) }
+    ];
 }
 
 function loadAnimalPath(animal_id) {
@@ -225,6 +233,10 @@ function loadAnimalPath(animal_id) {
   $.ajax({url: "animaltrack.php?id=" + animal_id, success: function(result) {
 
     var animal_track = result;
+
+    ///
+    // Calculate min/max date and figure out which is the next record
+    //
 
     var minDate = null;
     var maxDate = null;
@@ -243,18 +255,27 @@ function loadAnimalPath(animal_id) {
         maxDate = rec.date;
       }
 
-      // Set up next pointer
       rec.nextRec = nextRec;
-
       nextRec = rec;
     }
 
-    for (var i = 0; i < animal_track.length; i++) {
+    ///
+    // Figure out day indexes and days until next mark
+    //
+
+    for (var i = animal_track.length - 1; i >= 0; i--) {
       var rec = animal_track[i];
 
       // Set up day index
       rec.dayIndex = daysBetween(minDate, rec.date);
+
+      rec.daysUntilNext = (rec.nextRec === null ? -1 : rec.nextRec.dayIndex - rec.dayIndex);
     }
+
+
+    ///
+    // Now that we know the length of the trip, set up the slider ...
+    //
 
     // Setup slider
     $("#date-range").text("Data ranges from " + minDate.toString(dateFormat) + " to " + maxDate.toString(dateFormat));
@@ -266,109 +287,135 @@ function loadAnimalPath(animal_id) {
     $("#date-display").text("Current date: " + currentStartDate.toString('d-MMM-yyyy'));
     console.log("There are %d days between", days);
 
+
+    ///
+    // ... And create the data structure that will be used to draw day-by-day
+    //
+
     dayBuckets = [];
     numDays = days + 1;
     dayBuckets.length += days + 1;
 
     for (var i = 0; i < dayBuckets.length; ++ i) {
       dayBuckets[i] = {
+        hitRecords: [],
+        nextRecord: null,
+        previousRecord: null,
+
         activeMarkers: [],
-        currentPaths: [],
         futurePath: null
       };
     }
 
-    var lastNode = null;
+
+    ///
+    // Add each day's records
+    //
+
     for (var i = 0; i < animal_track.length; i++) {
       var rec = animal_track[i];
 
-      var marker = new google.maps.Marker({
-        position: { lat: rec.lat, lng: rec.lng },
-        icon: {
-          path: google.maps.SymbolPath.CIRCLE,
-          scale: 2,
-          fillColor: '#f3f',
-          fillOpacity: 0.15,
-          strokeColor: '#f3f',
-          strokeWeight: 1
-        },
-        draggable: false,
-        map: map
-      });
+      dayBuckets[rec.dayIndex].hitRecords.push(rec);
+    }
 
-      sharkPathMarkers.push(marker);
-      dayBuckets[rec.dayIndex].activeMarkers.push(marker);
 
-      var lineSymbolFilled = {
-        path: google.maps.SymbolPath.FORWARD_CLOSED_ARROW,
-        scale: 2.5,
-        fillColor: '#f3f',
-        fillOpacity: 0.65,
-        strokeOpacity: 0.85,
-        strokeColor: "#f3f",
-        strokeWeight: 1.0
-      };
+    ///
+    // And figure out the next and previous records for each day that has no records
+    //
 
-      var thisNode = { lat: rec.lat, lng: rec.lng };
-      if (lastNode !== null && (lastNode.lng != thisNode.lng || lastNode.lat != thisNode.lat)) {
-        var solidPath = new google.maps.Polyline({
-          path: [lastNode, thisNode],
-          geodesic: true,
-          // strokeOpacity: 0,
-          strokeOpacity: 0.85,
-          strokeColor: "#f3f",
-          strokeWeight: 1.0
-          // icons: [{
-          //   icon: lineSymbolFilled,
-          //   offset: '0',
-          //   repeat: '20px'
-          // }],
-        });
-        dayBuckets[rec.dayIndex].currentPaths.push(solidPath);
-      }
-      lastNode = thisNode;
+    var previousRecord = null;
+    for (var i = 0; i < dayBuckets.length; ++ i) {
 
-      var lineSymbolEmpty = {
-        path: google.maps.SymbolPath.FORWARD_CLOSED_ARROW,
-        scale: 2.5,
-        strokeOpacity: 0.75,
-        strokeColor: "#3ff",
-        strokeWeight: 1.0
-      };
-
-      if (rec.nextRec === null) {
-        // console.log("rec %d has no next", i);
+      if (dayBuckets[i].hitRecords.length > 0) {
+        previousRecord = dayBuckets[i].hitRecords.last();
       }
       else {
-        // console.log("rec %d has next", i);
+        dayBuckets[i].previousRecord = previousRecord;
+      }
 
-        var nextNode = { lat: rec.nextRec.lat, lng: rec.nextRec.lng };
-        var emptyPath = new google.maps.Polyline({
-          path: [thisNode, nextNode],
+    }
+
+    var nextRecord = null;
+    for (var i = dayBuckets.length - 1; i >= 0 ; -- i) {
+      if (dayBuckets[i].hitRecords.length > 0) {
+        nextRecord = dayBuckets[i].hitRecords[0];
+      }
+      else {
+        dayBuckets[i].nextRecord = nextRecord;
+      }
+
+    }
+
+
+    ///
+    // Add markers for days with hit records and line segments for days with no records
+    //
+
+    for (var i = 0; i < dayBuckets.length; ++ i) {
+
+      if (dayBuckets[i].hitRecords.length > 0) {
+
+        for (var j = 0; j < dayBuckets[i].hitRecords.length; ++ j) {
+            var rec = dayBuckets[i].hitRecords[j];
+
+            var marker = new google.maps.Marker({
+              position: { lat: rec.lat, lng: rec.lng },
+              icon: {
+                path: google.maps.SymbolPath.CIRCLE,
+                scale: 2,
+                fillColor: '#f3f',
+                fillOpacity: 0.15,
+                strokeColor: '#f3f',
+                strokeWeight: 1
+              },
+              draggable: false,
+              map: map
+            });
+
+            dayBuckets[i].activeMarkers.push(marker);
+        }
+
+      }
+      else {
+
+        var prevLatLng = { lat: dayBuckets[i].previousRecord.lat, lng: dayBuckets[i].previousRecord.lng };
+        var nextLatLng = { lat: dayBuckets[i].nextRecord.lat, lng: dayBuckets[i].nextRecord.lng };
+        var daysIn = i - dayBuckets[i].previousRecord.dayIndex - 1;
+        var totalDays = dayBuckets[i].nextRecord.dayIndex - dayBuckets[i].previousRecord.dayIndex - 1;
+        var currLatLng = makeLatLngSegment(prevLatLng, nextLatLng, daysIn, totalDays);
+
+        var lineSymbol = {
+          path: google.maps.SymbolPath.FORWARD_CLOSED_ARROW,
+          scale: 2.75,
+          fillColor: '#2ee',
+          fillOpacity: 0.5,
+          strokeOpacity: 0.85,
+          strokeColor: "#3ff",
+          strokeWeight: 1.25
+        };
+
+        var dottedPath = new google.maps.Polyline({
+          path: currLatLng,
           geodesic: true,
           strokeOpacity: 0,
           icons: [{
-            icon: lineSymbolEmpty,
-            offset: '0',
+            icon: lineSymbol,
+            offset: '20px',
             repeat: '20px'
           }],
         });
-        dayBuckets[rec.dayIndex].futurePath = emptyPath;
-      }
-    }
 
-    var lastFuturePath = null;
-    for (var i = 0; i < dayBuckets.length; ++ i) {
-      if (dayBuckets[i].futurePath === null) {
-        dayBuckets[i].futurePath = lastFuturePath;
+        dayBuckets[i].futurePath = dottedPath;
       }
-      else {
-        lastFuturePath = dayBuckets[i].futurePath;
-        dayBuckets[i].futurePath = null;
-      }
+
     }
 
     showDay(0);
+
+
+    ///
+    // Calculate bounds and zoom on map
+    //
 
     if (animal_track.length > 0) {
 
@@ -397,6 +444,11 @@ function loadAnimalPath(animal_id) {
       });
 
     }
+
+
+    ///
+    // Done!
+    //
 
     $("#loading").hide();
   }});
