@@ -539,6 +539,9 @@ function loadAnimalPath(animal_id) {
         //   }],
         // });
 
+
+        if (prevLatLng.lat != nextLatLng.lat || prevLatLng.lng != nextLatLng.lng) {
+
         var marker = new FadeMarker(currLatLng[0], latLngAngle(currLatLng) * 360.0 / (2.0 * 3.14159));
         // var marker = new google.maps.Marker({
         //   position: currLatLng[0],
@@ -554,6 +557,7 @@ function loadAnimalPath(animal_id) {
         // });
 
         dayBuckets[i].futurePath = marker;
+      }
       }
 
     }
