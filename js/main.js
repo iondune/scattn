@@ -254,6 +254,13 @@ function makeLatLngSegment(prev, next, days, total) {
     ];
 }
 
+function latLngAngle(pair) {
+  var prev = pair[0];
+  var next = pair[1];
+  var extent = { lat: next.lat - prev.lat, lng: next.lng - prev.lng };
+  return Math.atan2(extent.lng, extent.lat);
+}
+
 function loadAnimalPath(animal_id) {
 
   $("#loading").show();
@@ -443,7 +450,8 @@ function loadAnimalPath(animal_id) {
             scale: 3.5,
             fillColor: '#3ff',
             strokeWeight: 1.0,
-            strokeColor: "#3ff"
+            strokeColor: "#3ff",
+            rotation: latLngAngle(currLatLng) * 360.0 / (2.0 * 3.14159)
           },
           draggable: false
         });
