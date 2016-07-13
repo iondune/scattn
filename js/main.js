@@ -183,15 +183,44 @@ function advanceDay() {
 }
 
 function showDay(day) {
+
+  var lineSymbolFull = {
+    path: google.maps.SymbolPath.FORWARD_CLOSED_ARROW,
+    scale: 2.75,
+    fillColor: '#2ee',
+    fillOpacity: 0.5,
+    strokeOpacity: 0.85,
+    strokeColor: "#3ff",
+    strokeWeight: 1.25
+  };
+
+  var lineSymbolHalf = {
+    path: google.maps.SymbolPath.FORWARD_CLOSED_ARROW,
+    scale: 2.5,
+    fillColor: '#2ee',
+    fillOpacity: 0.2,
+    strokeOpacity: 0.35,
+    strokeColor: "#3ff",
+    strokeWeight: 1.25
+  };
+
   if (lastDay >= 0) {
-    // console.log("unsetting the last day %d", lastDay);
     for (var i = 0; i < dayBuckets[lastDay].activeMarkers.length; ++ i) {
       var marker = dayBuckets[lastDay].activeMarkers[i];
       marker.getIcon().scale = 2;
       marker.setMap(map);
     }
     if (dayBuckets[lastDay].futurePath !== null) {
-      dayBuckets[lastDay].futurePath.setMap(null);
+      dayBuckets[lastDay].futurePath.setOptions({
+          icons: [{
+            icon: lineSymbolHalf,
+            offset: '20px',
+            repeat: '20px'
+          }]});
+      var deleteMe = dayBuckets[lastDay].futurePath;
+      setTimeout(function() {
+        deleteMe.setMap(null);
+      }, 400);
     }
   }
 
