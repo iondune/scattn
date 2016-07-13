@@ -196,12 +196,22 @@ function fadeInMarker(marker, totalTime) {
   const steps = 8;
 
   marker.setMap(map);
-  setMarkerOpacity(marker, fillOpacity / steps, strokeOpacity / steps);
-  for (var i = 2; i <= steps; ++ i) {
-    setTimeout(function() {
-      setMarkerOpacity(marker, fillOpacity * i / steps, strokeOpacity * i / steps);
-    }, totalTime * i / steps);
-  }
+
+  var duration = totalTime / steps;
+  fadeInCallback = function(marker, i) {
+    setMarkerOpacity(marker, fillOpacity * i / steps, strokeOpacity * i / steps);
+
+    if (i < steps) {
+      setTimeout(fadeInCallback, duration, marker, i + 1);
+    }
+    else {
+      setTimeout(function() {
+        setMarkerOpacity(marker, fillOpacity, strokeOpacity);
+      }, duration);
+    }
+  };
+
+  setTimeout(fadeInCallback, duration, marker, 2);
 
 }
 
@@ -212,15 +222,23 @@ function fadeOutMarker(marker, totalTime) {
   const steps = 8;
 
   setMarkerOpacity(marker, fillOpacity * (steps - 1) / steps, strokeOpacity * (steps - 1) / steps);
-  for (var i = steps - 2; i > 0; -- i) {
-    setTimeout(function() {
-      setMarkerOpacity(marker, fillOpacity * i / steps, strokeOpacity * i / steps);
-    }, totalTime * i / steps);
-  }
 
-  setTimeout(function() {
-    marker.setMap(null);
-  }, totalTime);
+  var duration = totalTime / steps;
+  fadeOutCallback = function(marker, i) {
+    setMarkerOpacity(marker, fillOpacity * i / steps, strokeOpacity * i / steps);
+
+    if (i > 0) {
+      setTimeout(fadeOutCallback, duration, marker, i - 1);
+    }
+    else {
+      setTimeout(function() {
+        marker.setMap(null);
+      }, duration);
+    }
+  };
+
+  setTimeout(fadeOutCallback, duration, marker, steps - 2);
+
 }
 
 function showDay(day) {
@@ -235,7 +253,7 @@ function showDay(day) {
       marker.setMap(map);
     }
     if (dayBuckets[lastDay].futurePath !== null) {
-      fadeOutMarker(dayBuckets[lastDay].futurePath);
+      fadeOutMarker(dayBuckets[lastDay].futurePath, 800);
     }
   }
 
@@ -245,7 +263,7 @@ function showDay(day) {
     marker.setMap(map);
   }
   if (dayBuckets[day].futurePath !== null) {
-    fadeInMarker(dayBuckets[day].futurePath, 500);
+    fadeInMarker(dayBuckets[day].futurePath, 450);
   }
 
   lastDay = day;
