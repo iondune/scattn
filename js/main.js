@@ -63,36 +63,36 @@ function initialize() {
     div.style.borderWidth = '0px';
     div.style.position = 'absolute';
 
-    // Create the img element and attach it to the div.
     var img = document.createElement('div');
     img.style.transform = "rotate(" + this.angle_ + "deg)";
     img.classList.add("arrow-up");
-    // img.classList.add("pink");
     div.appendChild(img);
 
 
     this.div_ = div;
+    this.img_ = img;
 
-    // Add the element to the "overlayImage" pane.
     var panes = this.getPanes();
     panes.overlayImage.appendChild(this.div_);
+
+    this.show();
   };
 
   FadeMarker.prototype.onRemove = function() {
     this.div_.parentNode.removeChild(this.div_);
   };
 
-  // Set the visibility to 'hidden' or 'visible'.
   FadeMarker.prototype.hide = function() {
     if (this.div_) {
-      // The visibility property must be a string enclosed in quotes.
-      this.div_.style.visibility = 'hidden';
+      this.img_.classList.remove("in");
+      this.img_.classList.add("out");
     }
   };
 
   FadeMarker.prototype.show = function() {
     if (this.div_) {
-      this.div_.style.visibility = 'visible';
+      this.img_.classList.remove("out");
+      this.img_.classList.add("in");
     }
   };
 
@@ -315,7 +315,8 @@ function showDay(day) {
     }
     if (dayBuckets[lastDay].futurePath !== null) {
       // fadeOutMarker(dayBuckets[lastDay].futurePath, 800);
-      dayBuckets[lastDay].futurePath.setMap(null);
+      dayBuckets[lastDay].futurePath.hide();
+      // dayBuckets[lastDay].futurePath.setMap(null);
     }
   }
 
@@ -327,6 +328,7 @@ function showDay(day) {
   if (dayBuckets[day].futurePath !== null) {
     // fadeInMarker(dayBuckets[day].futurePath, 450);
     dayBuckets[day].futurePath.setMap(map);
+    dayBuckets[day].futurePath.show();
   }
 
   lastDay = day;
