@@ -16,6 +16,15 @@ var currentStartDate = new Date("2014-10-13 13:34:10");
 var dayBuckets = [];
 var numDays = 0;
 
+function FadeMarker(latlng, angle) {
+  this.latlng_ = new google.maps.LatLng(latlng);
+  this.angle_ = angle;
+  this.div_ = null;
+
+  // this.setMap(map);
+}
+
+
 function initialize() {
   var mapProp = {
     center:new google.maps.LatLng(34.007552, -118.500061),
@@ -26,15 +35,67 @@ function initialize() {
     mapTypeControl: false,
     streetViewControl: false,
     panControlOptions:{
-        position: google.maps.ControlPosition.TOP_RIGHT
+      position: google.maps.ControlPosition.TOP_RIGHT
     },
     zoomControlOptions:{
-        style:google.maps.ZoomControlStyle.SMALL,
-        position: google.maps.ControlPosition.TOP_RIGHT
+      style:google.maps.ZoomControlStyle.SMALL,
+      position: google.maps.ControlPosition.TOP_RIGHT
     }
   };
 
   map = new google.maps.Map(document.getElementById("googleMap"), mapProp);
+
+  FadeMarker.prototype = new google.maps.OverlayView();
+
+  FadeMarker.prototype.draw = function() {
+    var overlayProjection = this.getProjection();
+    var point = overlayProjection.fromLatLngToDivPixel(this.latlng_);
+
+    var div = this.div_;
+    div.style.left = (point.x) + 'px';
+    div.style.top = (point.y) + 'px';
+  };
+
+  FadeMarker.prototype.onAdd = function() {
+
+    var div = document.createElement('div');
+    div.style.border = 'none';
+    div.style.borderWidth = '0px';
+    div.style.position = 'absolute';
+
+    // Create the img element and attach it to the div.
+    var img = document.createElement('div');
+    img.style.transform = "rotate(" + this.angle_ + "deg)";
+    img.classList.add("arrow-up");
+    // img.classList.add("pink");
+    div.appendChild(img);
+
+
+    this.div_ = div;
+
+    // Add the element to the "overlayImage" pane.
+    var panes = this.getPanes();
+    panes.overlayImage.appendChild(this.div_);
+  };
+
+  FadeMarker.prototype.onRemove = function() {
+    this.div_.parentNode.removeChild(this.div_);
+  };
+
+  // Set the visibility to 'hidden' or 'visible'.
+  FadeMarker.prototype.hide = function() {
+    if (this.div_) {
+      // The visibility property must be a string enclosed in quotes.
+      this.div_.style.visibility = 'hidden';
+    }
+  };
+
+  FadeMarker.prototype.show = function() {
+    if (this.div_) {
+      this.div_.style.visibility = 'visible';
+    }
+  };
+
 }
 
 function addDays(date, days) {
@@ -253,7 +314,8 @@ function showDay(day) {
       marker.setMap(map);
     }
     if (dayBuckets[lastDay].futurePath !== null) {
-      fadeOutMarker(dayBuckets[lastDay].futurePath, 800);
+      // fadeOutMarker(dayBuckets[lastDay].futurePath, 800);
+      dayBuckets[lastDay].futurePath.setMap(null);
     }
   }
 
@@ -263,7 +325,8 @@ function showDay(day) {
     marker.setMap(map);
   }
   if (dayBuckets[day].futurePath !== null) {
-    fadeInMarker(dayBuckets[day].futurePath, 450);
+    // fadeInMarker(dayBuckets[day].futurePath, 450);
+    dayBuckets[day].futurePath.setMap(map);
   }
 
   lastDay = day;
@@ -271,7 +334,7 @@ function showDay(day) {
 
 if (!Array.prototype.last){
     Array.prototype.last = function(){
-        return this[this.length - 1];
+      return this[this.length - 1];
     };
 };
 
@@ -474,18 +537,19 @@ function loadAnimalPath(animal_id) {
         //   }],
         // });
 
-        var marker = new google.maps.Marker({
-          position: currLatLng[0],
-          icon: {
-            path: google.maps.SymbolPath.FORWARD_CLOSED_ARROW,
-            scale: 3.5,
-            fillColor: '#3ff',
-            strokeWeight: 1.0,
-            strokeColor: "#3ff",
-            rotation: latLngAngle(currLatLng) * 360.0 / (2.0 * 3.14159)
-          },
-          draggable: false
-        });
+        var marker = new FadeMarker(currLatLng[0], latLngAngle(currLatLng) * 360.0 / (2.0 * 3.14159));
+        // var marker = new google.maps.Marker({
+        //   position: currLatLng[0],
+        //   icon: {
+        //     path: google.maps.SymbolPath.FORWARD_CLOSED_ARROW,
+        //     scale: 3.5,
+        //     fillColor: '#3ff',
+        //     strokeWeight: 1.0,
+        //     strokeColor: "#3ff",
+        //     rotation: latLngAngle(currLatLng) * 360.0 / (2.0 * 3.14159)
+        //   },
+        //   draggable: false
+        // });
 
         dayBuckets[i].futurePath = marker;
       }
