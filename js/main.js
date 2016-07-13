@@ -189,6 +189,40 @@ function setMarkerOpacity(marker, fill, stroke) {
   marker.setIcon(icon);
 }
 
+function fadeInMarker(marker, totalTime) {
+
+  const fillOpacity = 0.5;
+  const strokeOpacity = 0.85;
+  const steps = 8;
+
+  marker.setMap(map);
+  setMarkerOpacity(marker, fillOpacity / steps, strokeOpacity / steps);
+  for (var i = 2; i <= steps; ++ i) {
+    setTimeout(function() {
+      setMarkerOpacity(marker, fillOpacity * i / steps, strokeOpacity * i / steps);
+    }, totalTime * i / steps);
+  }
+
+}
+
+function fadeOutMarker(marker, totalTime) {
+
+  const fillOpacity = 0.5;
+  const strokeOpacity = 0.85;
+  const steps = 8;
+
+  setMarkerOpacity(marker, fillOpacity * (steps - 1) / steps, strokeOpacity * (steps - 1) / steps);
+  for (var i = steps - 2; i > 0; -- i) {
+    setTimeout(function() {
+      setMarkerOpacity(marker, fillOpacity * i / steps, strokeOpacity * i / steps);
+    }, totalTime * i / steps);
+  }
+
+  setTimeout(function() {
+    marker.setMap(null);
+  }, totalTime);
+}
+
 function showDay(day) {
 
   const fillOpacity = 0.5;
@@ -201,17 +235,7 @@ function showDay(day) {
       marker.setMap(map);
     }
     if (dayBuckets[lastDay].futurePath !== null) {
-      var lastStep = dayBuckets[lastDay].futurePath;
-      setMarkerOpacity(lastStep, fillOpacity * 0.75, strokeOpacity * 0.75);
-      setTimeout(function() {
-        setMarkerOpacity(lastStep, fillOpacity * 0.5, strokeOpacity * 0.5);
-      }, 150);
-      setTimeout(function() {
-        setMarkerOpacity(lastStep, fillOpacity * 0.25, strokeOpacity * 0.25);
-      }, 300);
-      setTimeout(function() {
-        lastStep.setMap(null);
-      }, 450);
+      fadeOutMarker(dayBuckets[lastDay].futurePath);
     }
   }
 
@@ -221,18 +245,7 @@ function showDay(day) {
     marker.setMap(map);
   }
   if (dayBuckets[day].futurePath !== null) {
-    var thisStep = dayBuckets[day].futurePath;
-    thisStep.setMap(map);
-    setMarkerOpacity(thisStep, fillOpacity * 0.25, strokeOpacity * 0.25);
-    setTimeout(function() {
-      setMarkerOpacity(thisStep, fillOpacity * 0.5, strokeOpacity * 0.5);
-    }, 150);
-    setTimeout(function() {
-      setMarkerOpacity(thisStep, fillOpacity * 0.75, strokeOpacity * 0.75);
-    }, 300);
-    setTimeout(function() {
-      setMarkerOpacity(thisStep, fillOpacity, strokeOpacity);
-    }, 450);
+    fadeInMarker(dayBuckets[day].futurePath, 500);
   }
 
   lastDay = day;
