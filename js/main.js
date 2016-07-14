@@ -20,6 +20,7 @@ function FadeMarker(latlng, angle) {
   this.latlng_ = new google.maps.LatLng(latlng);
   this.angle_ = angle;
   this.div_ = null;
+  this.visible_ = false;
 
   // this.setMap(map);
 }
@@ -75,7 +76,12 @@ function initialize() {
     var panes = this.getPanes();
     panes.overlayImage.appendChild(this.div_);
 
-    this.show();
+    if (this.visible_) {
+      this.show();
+    }
+    else {
+      this.hide();
+    }
   };
 
   FadeMarker.prototype.onRemove = function() {
@@ -83,6 +89,8 @@ function initialize() {
   };
 
   FadeMarker.prototype.hide = function() {
+    this.visible_ = false;
+
     if (this.div_) {
       this.img_.classList.remove("in");
       this.img_.classList.add("out");
@@ -90,6 +98,8 @@ function initialize() {
   };
 
   FadeMarker.prototype.show = function() {
+    this.visible_ = true;
+
     if (this.div_) {
       this.img_.classList.remove("out");
       this.img_.classList.add("in");
