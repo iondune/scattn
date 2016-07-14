@@ -150,11 +150,11 @@ body, button, h1, h2, h3, h4, h5 {
 }
 
 .blink {
-  animation: blink-animation 1s steps(5, start) infinite;
+  animation: blink-animation 1s infinite;
 }
 
 @keyframes blink-animation {
-  to {
-    visibility: hidden;
-  }
+  0% { opacity: 1; }
+  50% { opacity: 0; }
+  100% { opacity: 1; }
 }
