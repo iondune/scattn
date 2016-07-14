@@ -90,6 +90,16 @@
       <div>
         <button onclick="loadOverlays('20160621')">June 21, 2016</button>
       </div>
+      <p>Playback Speed</p>
+      <div>
+        <button onclick="setPlaybackSpeed(1250)">Slow</button>
+      </div>
+      <div>
+        <button onclick="setPlaybackSpeed(750)">Normal</button>
+      </div>
+      <div>
+        <button onclick="setPlaybackSpeed(300)">Fast</button>
+      </div>
       <div>&nbsp;</div>
       <div>
         <a href="calendar.php">Calendar View</a>
@@ -108,7 +118,7 @@
         <button onclick="startPlayback()">Play</button>
         <button onclick="stopPlayback()">Stop</button>
       </div>
-      <p id="date-range">&nbsp;</p>
+      <div><span id="date-range">&nbsp;</span>&nbsp;&nbsp;&nbsp;<span id="play-icon" class="blink" style="display: none;">&#9658;&#9658;</span></div>
       <p id="date-display">&nbsp;</p>
       <div id="slider"></div>
     </div>

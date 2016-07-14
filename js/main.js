@@ -226,13 +226,16 @@ function daysBetween(date1, date2) {
 }
 
 var interval = null;
+var playbackSpeed = 750;
 
 function startPlayback() {
   if (interval !== null) {
     clearInterval(interval);
   }
 
-  interval = setInterval(advanceDay, 750);
+  $("#play-icon").show();
+
+  interval = setInterval(advanceDay, playbackSpeed);
 }
 
 function stopPlayback() {
@@ -240,7 +243,30 @@ function stopPlayback() {
     clearInterval(interval);
   }
 
+  $("#play-icon").hide();
+
   interval = null;
+}
+
+function setPlaybackSpeed(speed) {
+  playbackSpeed = speed;
+
+  var icon = "&#9658;";
+  var text = icon;
+
+  if (playbackSpeed <= 500) {
+    text += icon;
+  }
+  if (playbackSpeed <= 1000) {
+    text += icon;
+  }
+
+  $("#play-icon").html(text);
+
+  if (interval !== null) {
+    clearInterval(interval);
+    interval = setInterval(advanceDay, playbackSpeed);
+  }
 }
 
 var lastDay = -1;
