@@ -265,8 +265,9 @@ function showDay(day) {
   if (lastDay >= 0) {
     for (var i = 0; i < dayBuckets[lastDay].activeMarkers.length; ++ i) {
       var marker = dayBuckets[lastDay].activeMarkers[i];
-      marker.getIcon().scale = 2;
-      marker.setMap(map);
+      // marker.getIcon().scale = 2;
+      // marker.setMap(map);
+      marker.hide();
     }
     if (dayBuckets[lastDay].futurePath !== null) {
       dayBuckets[lastDay].futurePath.hide();
@@ -275,8 +276,9 @@ function showDay(day) {
 
   for (var i = 0; i < dayBuckets[day].activeMarkers.length; ++ i) {
     var marker = dayBuckets[day].activeMarkers[i];
-    marker.getIcon().scale = 12;
-    marker.setMap(map);
+    // marker.getIcon().scale = 12;
+    // marker.setMap(map);
+    marker.show();
   }
   if (dayBuckets[day].futurePath !== null) {
     dayBuckets[day].futurePath.setMap(map);
@@ -423,6 +425,7 @@ function loadAnimalPath(animal_id) {
 
     var nextRecord = null;
     for (var i = dayBuckets.length - 1; i >= 0 ; -- i) {
+
       if (dayBuckets[i].hitRecords.length > 0) {
         nextRecord = dayBuckets[i].hitRecords[0];
       }
@@ -437,6 +440,7 @@ function loadAnimalPath(animal_id) {
     // Add markers for days with hit records and line segments for days with no records
     //
 
+    var existingMarkers = {};
     for (var i = 0; i < dayBuckets.length; ++ i) {
 
       if (dayBuckets[i].hitRecords.length > 0) {
@@ -444,19 +448,28 @@ function loadAnimalPath(animal_id) {
         for (var j = 0; j < dayBuckets[i].hitRecords.length; ++ j) {
             var rec = dayBuckets[i].hitRecords[j];
 
-            var marker = new google.maps.Marker({
-              position: { lat: rec.lat, lng: rec.lng },
-              icon: {
-                path: google.maps.SymbolPath.CIRCLE,
-                scale: 2,
-                fillColor: '#f3f',
-                fillOpacity: 0.15,
-                strokeColor: '#f3f',
-                strokeWeight: 1
-              },
-              draggable: false,
-              map: map
-            });
+            if (! rec.old) {
+              var marker = new CustomMarker({ lat: rec.lat, lng: rec.lng }, 0, "circle", "circle-in", "circle-out");
+              // new google.maps.Marker({
+              //   position: { lat: rec.lat, lng: rec.lng },
+              //   icon: {
+              //     path: google.maps.SymbolPath.CIRCLE,
+              //     scale: 2,
+              //     fillColor: '#f3f',
+              //     fillOpacity: 0.15,
+              //     strokeColor: '#f3f',
+              //     strokeWeight: 1
+              //   },
+              //   draggable: false,
+              //   map: map
+              // });
+              marker.setMap(map);
+
+              existingMarkers[rec.receiver_id] = marker;
+            }
+            else {
+              var marker = existingMarkers[rec.receiver_id];
+            }
 
             dayBuckets[i].activeMarkers.push(marker);
         }
