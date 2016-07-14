@@ -59,10 +59,10 @@
       </div>
       <p>Receivers</p>
       <div>
-        <button onclick="showReceivers()">Show Receivers</button>
+        <button onclick="showReceivers()">Show All Receivers</button>
       </div>
       <div>
-        <button onclick="hideReceivers()">Hide Receivers</button>
+        <button onclick="hideReceivers()">Hide All Receivers</button>
       </div>
       <p>Sea Surface Temperature</p>
       <div>
