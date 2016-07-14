@@ -6,10 +6,7 @@ var overlayRight = null;
 
 var currentOverlay = '20160621';
 
-var sharkPathMarkers = [];
-var sharkPathLines = [];
-
-var markers = [];
+var markers = []; // For receivers
 var dateFormat = 'd-MMM-yyyy';
 var currentStartDate = new Date("2014-10-13 13:34:10");
 
@@ -196,11 +193,19 @@ function zoom() {
 
 function hideAnimalPath() {
 
-  for (var i = 0; i < sharkPathMarkers.length; i++) {
-    sharkPathMarkers[i].setMap(null);
-  }
+    ///
+    // Clear out existing markers and data
+    //
 
-  sharkPathMarkers = [];
+    for (var i = 0; i < dayBuckets.length; ++ i) {
+      for (var j = 0; j < dayBuckets[i].activeMarkers.length; ++ j) {
+        dayBuckets[i].activeMarkers[j].setMap(null);
+      }
+      if (dayBuckets[i].futurePath !== null) {
+        dayBuckets[i].futurePath.setMap(null);
+      }
+    }
+    dayBuckets = [];
 
 }
 
