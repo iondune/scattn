@@ -101,7 +101,7 @@
 <?php } ?>
     </div>
 
-    <div id="googleMap" style="width:1024px;height:725px;"></div>
+    <div id="googleMap"></div>
 
     <div id="bottom-control">
       <div style="float: right;">
