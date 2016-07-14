@@ -16,11 +16,15 @@ var currentStartDate = new Date("2014-10-13 13:34:10");
 var dayBuckets = [];
 var numDays = 0;
 
-function FadeMarker(latlng, angle) {
+function CustomMarker(latlng, angle, css, showclass, hideclass) {
   this.latlng_ = new google.maps.LatLng(latlng);
   this.angle_ = angle;
   this.div_ = null;
   this.visible_ = false;
+
+  this.css_ = css;
+  this.showclass_ = showclass;
+  this.hideclass_ = hideclass;
 
   // this.setMap(map);
 }
@@ -46,9 +50,9 @@ function initialize() {
 
   map = new google.maps.Map(document.getElementById("googleMap"), mapProp);
 
-  FadeMarker.prototype = new google.maps.OverlayView();
+  CustomMarker.prototype = new google.maps.OverlayView();
 
-  FadeMarker.prototype.draw = function() {
+  CustomMarker.prototype.draw = function() {
     var overlayProjection = this.getProjection();
     var point = overlayProjection.fromLatLngToDivPixel(this.latlng_);
 
@@ -57,7 +61,7 @@ function initialize() {
     div.style.top = (point.y) + 'px';
   };
 
-  FadeMarker.prototype.onAdd = function() {
+  CustomMarker.prototype.onAdd = function() {
 
     var div = document.createElement('div');
     div.style.border = 'none';
@@ -66,7 +70,7 @@ function initialize() {
 
     var img = document.createElement('div');
     img.style.transform = "rotate(" + this.angle_ + "deg)";
-    img.classList.add("arrow-up");
+    img.classList.add(this.css_);
     div.appendChild(img);
 
 
@@ -84,25 +88,25 @@ function initialize() {
     }
   };
 
-  FadeMarker.prototype.onRemove = function() {
+  CustomMarker.prototype.onRemove = function() {
     this.div_.parentNode.removeChild(this.div_);
   };
 
-  FadeMarker.prototype.hide = function() {
+  CustomMarker.prototype.hide = function() {
     this.visible_ = false;
 
     if (this.div_) {
-      this.img_.classList.remove("in");
-      this.img_.classList.add("out");
+      this.img_.classList.remove(this.showclass_);
+      this.img_.classList.add(this.hideclass_);
     }
   };
 
-  FadeMarker.prototype.show = function() {
+  CustomMarker.prototype.show = function() {
     this.visible_ = true;
 
     if (this.div_) {
-      this.img_.classList.remove("out");
-      this.img_.classList.add("in");
+      this.img_.classList.remove(this.hideclass_);
+      this.img_.classList.add(this.showclass_);
     }
   };
 
@@ -253,65 +257,6 @@ function advanceDay() {
   }
 }
 
-function setMarkerOpacity(marker, fill, stroke) {
-  icon = marker.getIcon();
-  icon.fillOpacity = fill;
-  icon.strokeOpacity = stroke;
-  marker.setIcon(icon);
-}
-
-function fadeInMarker(marker, totalTime) {
-
-  const fillOpacity = 0.5;
-  const strokeOpacity = 0.85;
-  const steps = 8;
-
-  marker.setMap(map);
-
-  var duration = totalTime / steps;
-  fadeInCallback = function(marker, i) {
-    setMarkerOpacity(marker, fillOpacity * i / steps, strokeOpacity * i / steps);
-
-    if (i < steps) {
-      setTimeout(fadeInCallback, duration, marker, i + 1);
-    }
-    else {
-      setTimeout(function() {
-        setMarkerOpacity(marker, fillOpacity, strokeOpacity);
-      }, duration);
-    }
-  };
-
-  setTimeout(fadeInCallback, duration, marker, 2);
-
-}
-
-function fadeOutMarker(marker, totalTime) {
-
-  const fillOpacity = 0.5;
-  const strokeOpacity = 0.85;
-  const steps = 8;
-
-  setMarkerOpacity(marker, fillOpacity * (steps - 1) / steps, strokeOpacity * (steps - 1) / steps);
-
-  var duration = totalTime / steps;
-  fadeOutCallback = function(marker, i) {
-    setMarkerOpacity(marker, fillOpacity * i / steps, strokeOpacity * i / steps);
-
-    if (i > 0) {
-      setTimeout(fadeOutCallback, duration, marker, i - 1);
-    }
-    else {
-      setTimeout(function() {
-        marker.setMap(null);
-      }, duration);
-    }
-  };
-
-  setTimeout(fadeOutCallback, duration, marker, steps - 2);
-
-}
-
 function showDay(day) {
 
   const fillOpacity = 0.5;
@@ -324,9 +269,7 @@ function showDay(day) {
       marker.setMap(map);
     }
     if (dayBuckets[lastDay].futurePath !== null) {
-      // fadeOutMarker(dayBuckets[lastDay].futurePath, 800);
       dayBuckets[lastDay].futurePath.hide();
-      // dayBuckets[lastDay].futurePath.setMap(null);
     }
   }
 
@@ -336,7 +279,6 @@ function showDay(day) {
     marker.setMap(map);
   }
   if (dayBuckets[day].futurePath !== null) {
-    // fadeInMarker(dayBuckets[day].futurePath, 450);
     dayBuckets[day].futurePath.setMap(map);
     dayBuckets[day].futurePath.show();
   }
@@ -528,46 +470,10 @@ function loadAnimalPath(animal_id) {
         var totalDays = dayBuckets[i].nextRecord.dayIndex - dayBuckets[i].previousRecord.dayIndex - 1;
         var currLatLng = makeLatLngSegment(prevLatLng, nextLatLng, daysIn, totalDays);
 
-        // var lineSymbol = {
-        //   path: google.maps.SymbolPath.FORWARD_CLOSED_ARROW,
-        //   scale: 2.75,
-        //   fillColor: '#2ee',
-        //   fillOpacity: 0.5,
-        //   strokeOpacity: 0.85,
-        //   strokeColor: "#3ff",
-        //   strokeWeight: 1.25
-        // };
-
-        // var dottedPath = new google.maps.Polyline({
-        //   path: currLatLng,
-        //   geodesic: true,
-        //   strokeOpacity: 0,
-        //   icons: [{
-        //     icon: lineSymbol,
-        //     offset: '20px',
-        //     repeat: '20px'
-        //   }],
-        // });
-
-
         if (prevLatLng.lat != nextLatLng.lat || prevLatLng.lng != nextLatLng.lng) {
-
-        var marker = new FadeMarker(currLatLng[0], latLngAngle(currLatLng) * 360.0 / (2.0 * 3.14159));
-        // var marker = new google.maps.Marker({
-        //   position: currLatLng[0],
-        //   icon: {
-        //     path: google.maps.SymbolPath.FORWARD_CLOSED_ARROW,
-        //     scale: 3.5,
-        //     fillColor: '#3ff',
-        //     strokeWeight: 1.0,
-        //     strokeColor: "#3ff",
-        //     rotation: latLngAngle(currLatLng) * 360.0 / (2.0 * 3.14159)
-        //   },
-        //   draggable: false
-        // });
-
-        dayBuckets[i].futurePath = marker;
-      }
+          var marker = new CustomMarker(currLatLng[0], latLngAngle(currLatLng) * 360.0 / (2.0 * 3.14159), "arrow-up", "in", "out");
+          dayBuckets[i].futurePath = marker;
+        }
       }
 
     }

@@ -114,3 +114,12 @@ body, button, h1, h2, h3, h4, h5 {
   opacity: 0;
   transition: visibility 0s 1s, opacity 1s linear;
 }
+
+.circle {
+  width:150px;
+  height:150px;
+  border: solid 1px #555;
+  background-color: #eed;
+  box-shadow: 10px -10px rgba(0,0,0,0.6);
+  border-radius:100px;
+}
