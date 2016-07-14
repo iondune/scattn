@@ -71,8 +71,8 @@
       <div>
         <button onclick="hideOverlay()">Hide SST Overlay</button>
       </div>
-      <div>&nbsp;</div>
-      <div>
+      <!--<div>&nbsp;</div>
+       <div>
         <button onclick="loadOverlays('20160616')">June 16, 2016</button>
       </div>
       <div>
@@ -89,7 +89,7 @@
       </div>
       <div>
         <button onclick="loadOverlays('20160621')">June 21, 2016</button>
-      </div>
+      </div> -->
       <p>Playback Speed</p>
       <div>
         <button onclick="setPlaybackSpeed(1250)">Slow</button>
