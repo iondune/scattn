@@ -101,7 +101,7 @@ body, button, h1, h2, h3, h4, h5 {
 }
 
 .in {
-  animation: fadein 0.5s;
+  animation: fadein 0.3s;
 }
 
 @keyframes fadein {
@@ -129,7 +129,8 @@ body, button, h1, h2, h3, h4, h5 {
 
 .circle-in {
   animation: bump 0.75s;
-  background-color: #f3f;
+  background-color: #f33;
+  z-index: 1;
 }
 
 .circle-out {
@@ -140,10 +141,10 @@ body, button, h1, h2, h3, h4, h5 {
 @keyframes bump {
   0% { background-color: #eed; }
   50% { background-color: #f33; left: -15px; top: -15px; width: 30px; height: 30px; border-radius: 15px; }
-  100% { background-color: #f3f; left: -10px; top: -10px; width: 20px; height: 20px; border-radius: 10px; }
+  100% { background-color: #f33; left: -10px; top: -10px; width: 20px; height: 20px; border-radius: 10px; }
 }
 
 @keyframes fadecolor {
-  from { background-color: #f3f; }
-  to { background-color: #eed; }
+  from { z-index: 1; background-color: #f33; }
+  to { z-index: auto; background-color: #eed; }
 }

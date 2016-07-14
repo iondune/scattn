@@ -450,19 +450,6 @@ function loadAnimalPath(animal_id) {
 
             if (! rec.old) {
               var marker = new CustomMarker({ lat: rec.lat, lng: rec.lng }, 0, "circle", "circle-in", "circle-out");
-              // new google.maps.Marker({
-              //   position: { lat: rec.lat, lng: rec.lng },
-              //   icon: {
-              //     path: google.maps.SymbolPath.CIRCLE,
-              //     scale: 2,
-              //     fillColor: '#f3f',
-              //     fillOpacity: 0.15,
-              //     strokeColor: '#f3f',
-              //     strokeWeight: 1
-              //   },
-              //   draggable: false,
-              //   map: map
-              // });
               marker.setMap(map);
 
               existingMarkers[rec.receiver_id] = marker;
