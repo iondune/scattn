@@ -145,6 +145,10 @@ $(document).ready(function() {
   });
 
   $("#bottom-control").draggable();
+
+  $("#play-button").button({
+    disabled: true
+  });
 });
 
 function playButtonClicked() {
@@ -276,7 +280,7 @@ function startPlayback() {
     interval = setInterval(advanceDay, playbackSpeed);
   }
   else {
-    $("#play-button").prop('disabled', true);
+    $("#play-button").button("disable");
   }
 }
 
@@ -451,7 +455,7 @@ function loadAnimalPath(animal_id) {
     $("#slider").slider("option", "value", 0);
     $("#slider").slider("option", "max", days);
     $("#date-display").text("Current date: " + currentStartDate.toString('d-MMM-yyyy'));
-    $("#play-button").prop('disabled', false);
+    $("#play-button").button("enable");
     console.log("There are %d days between", days);
 
 
