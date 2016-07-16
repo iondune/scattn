@@ -134,7 +134,7 @@ body, button, h1, h2, h3, h4, h5 {
 
 .circle-in {
   animation: bump 0.75s;
-  background-color: #f33;
+  background-color: #F73667;
   z-index: 1;
 }
 
