@@ -147,6 +147,15 @@ $(document).ready(function() {
   $("#bottom-control").draggable();
 });
 
+function playButtonClicked() {
+  if (isPlaying()) {
+    stopPlayback();
+  }
+  else {
+    startPlayback();
+  }
+}
+
 function showOverlay() {
   loadOverlays(currentOverlay);
 }
@@ -256,13 +265,28 @@ var interval = null;
 var playbackSpeed = 750;
 
 function startPlayback() {
-  if (interval !== null) {
-    clearInterval(interval);
+  if (dayBuckets.length > 0) {
+    if (interval !== null) {
+      clearInterval(interval);
+    }
+
+    $("#play-icon").show();
+    $("#play-button").html("Stop");
+
+    interval = setInterval(advanceDay, playbackSpeed);
   }
+  else {
+    $("#play-button").prop('disabled', true);
+  }
+}
 
-  $("#play-icon").show();
-
-  interval = setInterval(advanceDay, playbackSpeed);
+function isPlaying() {
+  if (interval !== null) {
+    return true;
+  }
+  else {
+    return false;
+  }
 }
 
 function stopPlayback() {
@@ -271,6 +295,7 @@ function stopPlayback() {
   }
 
   $("#play-icon").hide();
+  $("#play-button").html("Play");
 
   interval = null;
 }
@@ -426,6 +451,7 @@ function loadAnimalPath(animal_id) {
     $("#slider").slider("option", "value", 0);
     $("#slider").slider("option", "max", days);
     $("#date-display").text("Current date: " + currentStartDate.toString('d-MMM-yyyy'));
+    $("#play-button").prop('disabled', false);
     console.log("There are %d days between", days);
 
 

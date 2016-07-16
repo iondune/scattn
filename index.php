@@ -84,7 +84,7 @@
         <label for="playback-speed-slow">Slow</label>
         <input type="radio" name="playback-speed" id="playback-speed-slow" onclick="setPlaybackSpeed(1250)">
         <label for="playback-speed-normal">Normal</label>
-        <input type="radio" name="playback-speed" id="playback-speed-normal" checked="checked" onclick="setPlaybackSpeed(750)">
+        <input type="radio" name="playback-speed" id="playback-speed-normal" checked="true" onclick="setPlaybackSpeed(750)">
         <label for="playback-speed-fast">Fast</label>
         <input type="radio" name="playback-speed" id="playback-speed-fast" onclick="setPlaybackSpeed(300)">
       </fieldset>
@@ -101,11 +101,10 @@
 
     <div id="bottom-control">
       <div style="float: right;">
-        <button onclick="startPlayback()">Play</button>
-        <button onclick="stopPlayback()">Stop</button>
+        <button id="play-button" onclick="playButtonClicked()" disabled="true">Play</button>
       </div>
-      <div><span id="date-range">&nbsp;</span>&nbsp;&nbsp;&nbsp;<span id="play-icon" class="blink" style="display: none;">&#9658;&#9658;</span></div>
-      <p id="date-display">&nbsp;</p>
+      <div style="margin-bottom: 8px;"><span id="date-range">&nbsp;</span></div>
+      <div style="margin-bottom: 16px;"><span id="date-display">&nbsp;</span> &nbsp;&nbsp;&nbsp; <span id="play-icon" class="blink" style="display: none;">&#9658;&#9658;</span></div>
       <div id="slider"></div>
     </div>
   </div>
