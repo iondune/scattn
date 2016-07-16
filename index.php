@@ -71,12 +71,12 @@
       <fieldset>
         <legend>Options: </legend>
         <label for="show-receivers">All Receivers</label>
-        <input type="checkbox" name="show-receivers" id="show-receivers">
+        <input type="checkbox" name="show-receivers" id="show-receivers" autocomplete="off">
 
         <br />
 
         <label for="show-sst">SST Overlay</label>
-        <input type="checkbox" name="show-sst" id="show-sst">
+        <input type="checkbox" name="show-sst" id="show-sst" autocomplete="off">
       </fieldset>
 
       <div>&nbsp;</div>
@@ -84,11 +84,11 @@
       <fieldset id="playback-speed">
         <legend>Playback Speed: </legend>
         <label for="playback-speed-slow">Slow</label>
-        <input type="radio" name="playback-speed" id="playback-speed-slow" onclick="setPlaybackSpeed(1250)">
+        <input type="radio" name="playback-speed" id="playback-speed-slow" onclick="setPlaybackSpeed(1250)" autocomplete="off">
         <label for="playback-speed-normal">Normal</label>
-        <input type="radio" name="playback-speed" id="playback-speed-normal" checked="true" onclick="setPlaybackSpeed(750)">
+        <input type="radio" name="playback-speed" id="playback-speed-normal" checked="true" onclick="setPlaybackSpeed(750)" autocomplete="off">
         <label for="playback-speed-fast">Fast</label>
-        <input type="radio" name="playback-speed" id="playback-speed-fast" onclick="setPlaybackSpeed(300)">
+        <input type="radio" name="playback-speed" id="playback-speed-fast" onclick="setPlaybackSpeed(300)" autocomplete="off">
       </fieldset>
       <div>&nbsp;</div>
       <div>
