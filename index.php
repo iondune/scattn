@@ -12,13 +12,17 @@
   <!-- CSS -->
   <link rel="stylesheet" href="css/main.css">
   <link rel="stylesheet" href="css/dropdown.css">
-  <link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
+
+  <!-- jQuery -->
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.0.0/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/datejs/1.0/date.min.js"></script>
+
+  <!-- jQuery UI -->
+  <link rel="stylesheet" href="//code.jquery.com/ui/1.12.0/themes/base/jquery-ui.css">
+  <script src="https://code.jquery.com/ui/1.12.0/jquery-ui.js"></script>
 
   <!-- SCRIPTS -->
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.0.0/jquery.min.js"></script>
   <script type="text/javascript" src="js/main.js"></script>
-  <script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/datejs/1.0/date.min.js"></script>
   <script async defer src="http://maps.googleapis.com/maps/api/js?key=AIzaSyCMIhlsl_XZkBvxLfNSXeOzRBOQ-WwjGXU&callback=initialize"></script>
 
   <!-- FAVICON -->
@@ -38,6 +42,8 @@
 
   <div id="page">
 
+    <div id="googleMap"></div>
+
     <div id="sidebar">
       <div class="dropdown">
         <button class="dropbtn">Choose Animal</button>
@@ -53,53 +59,35 @@
       <div>
         <a href="animals.php">Full Animal List</a>
       </div>
+
       <div>&nbsp;</div>
+
       <div>
         <button onclick="zoom()">Zoom Out</button>
       </div>
-      <p>Receivers</p>
-      <div>
-        <button onclick="showReceivers()">Show All Receivers</button>
-      </div>
-      <div>
-        <button onclick="hideReceivers()">Hide All Receivers</button>
-      </div>
-      <p>Sea Surface Temperature</p>
-      <div>
-        <button onclick="showOverlay()">Show SST Overlay</button>
-      </div>
-      <div>
-        <button onclick="hideOverlay()">Hide SST Overlay</button>
-      </div>
-      <!--<div>&nbsp;</div>
-       <div>
-        <button onclick="loadOverlays('20160616')">June 16, 2016</button>
-      </div>
-      <div>
-        <button onclick="loadOverlays('20160617')">June 17, 2016</button>
-      </div>
-      <div>
-        <button onclick="loadOverlays('20160618')">June 18, 2016</button>
-      </div>
-      <div>
-        <button onclick="loadOverlays('20160619')">June 19, 2016</button>
-      </div>
-      <div>
-        <button onclick="loadOverlays('20160620')">June 20, 2016</button>
-      </div>
-      <div>
-        <button onclick="loadOverlays('20160621')">June 21, 2016</button>
-      </div> -->
-      <p>Playback Speed</p>
-      <div>
-        <button onclick="setPlaybackSpeed(1250)">Slow</button>
-      </div>
-      <div>
-        <button onclick="setPlaybackSpeed(750)">Normal</button>
-      </div>
-      <div>
-        <button onclick="setPlaybackSpeed(300)">Fast</button>
-      </div>
+
+      <fieldset>
+        <legend>Options: </legend>
+        <label for="show-receivers">All Receivers</label>
+        <input type="checkbox" name="show-receivers" id="show-receivers">
+
+        <br />
+
+        <label for="show-sst">SST Overlay</label>
+        <input type="checkbox" name="show-sst" id="show-sst">
+      </fieldset>
+
+      <div>&nbsp;</div>
+
+      <fieldset id="playback-speed">
+        <legend>Playback Speed: </legend>
+        <label for="playback-speed-slow">Slow</label>
+        <input type="radio" name="playback-speed" id="playback-speed-slow" onclick="setPlaybackSpeed(1250)">
+        <label for="playback-speed-normal">Normal</label>
+        <input type="radio" name="playback-speed" id="playback-speed-normal" checked="checked" onclick="setPlaybackSpeed(750)">
+        <label for="playback-speed-fast">Fast</label>
+        <input type="radio" name="playback-speed" id="playback-speed-fast" onclick="setPlaybackSpeed(300)">
+      </fieldset>
       <div>&nbsp;</div>
       <div>
         <a href="calendar.php">Calendar View</a>
@@ -110,8 +98,6 @@
       </div>
 <?php } ?>
     </div>
-
-    <div id="googleMap"></div>
 
     <div id="bottom-control">
       <div style="float: right;">

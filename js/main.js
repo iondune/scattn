@@ -123,6 +123,28 @@ $(document).ready(function() {
     },
     disabled: true
   });
+
+  $("input[type='radio']").checkboxradio();
+
+  $("#show-receivers").on("change", function () {
+    if ($(this).is(':checked')) {
+      showReceivers();
+    }
+    else {
+      hideReceivers();
+    }
+  });
+
+  $("#show-sst").on("change", function () {
+    if ($(this).is(':checked')) {
+      showOverlay();
+    }
+    else {
+      hideOverlay();
+    }
+  });
+
+  $("#bottom-control").draggable();
 });
 
 function showOverlay() {

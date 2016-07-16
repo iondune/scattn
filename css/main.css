@@ -32,19 +32,34 @@ body, button, h1, h2, h3, h4, h5 {
 }
 
 #sidebar {
+  background-color: #DDE5EB;
   padding: 10px;
-  width: 220px;
+  width: 160px;
+  height: 450px;
 
   position: absolute;
-  left: 0;
-  top: 102px;
-  right: 0;
-  bottom: 0;
+  left: 35px;
+  top: 137px;
+
+  font-size: 12px;
+}
+
+#bottom-control {
+  position: absolute;
+  left: 35px;
+  top: 640px;
+
+  width: 350px;
+  height: 90px;
+  background-color: #A5BBC9;
+  padding: 20px;
+
+  font-size: 12px;
 }
 
 #googleMap {
   position: absolute;
-  left: 240px;
+  left: 0;
   top: 102px;
   right: 0;
   bottom: 0;
@@ -77,16 +92,6 @@ body, button, h1, h2, h3, h4, h5 {
   text-align: center;
 }
 
-#bottom-control {
-  position: absolute;
-  bottom: 50px;
-  left: 300px;
-
-  width: 600px;
-  background-color: #A5BBC9;
-  padding: 20px;
-}
-
 #date-range {
   margin-top: 0;
 }
@@ -94,10 +99,10 @@ body, button, h1, h2, h3, h4, h5 {
 .arrow-up {
   width: 0;
   height: 0;
-  border-left: 12px solid transparent;
-  border-right: 12px solid transparent;
+  border-left: 8px solid transparent;
+  border-right: 8px solid transparent;
 
-  border-bottom: 24px solid #3ff;
+  border-bottom: 16px solid #FF7547;
 }
 
 .in {
@@ -117,14 +122,14 @@ body, button, h1, h2, h3, h4, h5 {
 
 .circle {
   position: relative;
-  left: -10px;
-  top: -10px;
-  width:20px;
-  height:20px;
+  left: -8px;
+  top: -8px;
+  width: 16px;
+  height: 16px;
   border: solid 1px #555;
   background-color: #eed;
   box-shadow: 0px 0px 6px rgba(0, 0, 0, 0.6);
-  border-radius:10px;
+  border-radius: 8px;
 }
 
 .circle-in {
@@ -140,13 +145,13 @@ body, button, h1, h2, h3, h4, h5 {
 
 @keyframes bump {
   0% { background-color: #eed; }
-  50% { background-color: #f33; left: -15px; top: -15px; width: 30px; height: 30px; border-radius: 15px; }
-  100% { background-color: #f33; left: -10px; top: -10px; width: 20px; height: 20px; border-radius: 10px; }
+  50% { background-color: #F73667; left: -14px; top: -14px; width: 28px; height: 28px; border-radius: 14px; }
+  100% { background-color: #F73667; left: -8px; top: -8px; width: 16px; height: 16px; border-radius: 8px; }
 }
 
 @keyframes fadecolor {
-  from { z-index: 1; background-color: #f33; }
-  to { z-index: auto; background-color: #eed; }
+  from { z-index: 1; background-color: #F73667; }
+  to { z-index: auto; background-color: #dee; }
 }
 
 .blink {
@@ -157,4 +162,9 @@ body, button, h1, h2, h3, h4, h5 {
   0% { opacity: 1; }
   50% { opacity: 0; }
   100% { opacity: 1; }
+}
+
+#playback-speed label {
+  margin-bottom: 10px;
+  display: block;
 }
