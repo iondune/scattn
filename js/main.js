@@ -161,6 +161,11 @@ function playButtonClicked() {
   }
 }
 
+function closeWelcome() {
+  $("#obscure").hide();
+  $("#welcome").hide();
+}
+
 function showOverlay() {
   loadOverlays(currentOverlay);
 }

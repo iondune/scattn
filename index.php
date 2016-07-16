@@ -31,13 +31,28 @@
 
 <body <?php if (isset($_GET["track"])) echo "onload=loadAnimalPath(" . $_GET["track"] . ");"; ?>>
 
+  <div id="obscure">
+  </div>
+
   <div id="loading" style="display: none;">
     Loading ...
   </div>
 
+  <div id="welcome">
+    <div id="welcome-text">
+      <h3><strong>Welcome to the SCATTN Animal Tracker!</strong></h3>
+      <p>Orange arrows mean animals travelling over a period of multiple days.</p>
+      <p>Windows can be dragged.</p>
+      <p>This is just placeholder text that should be replaced with something more elegantly written.</p>
+      <div>
+        <button onclick="closeWelcome()">OK</button>
+      </div>
+    </div>
+  </div>
+
   <div id="header">
-    <img style="float: left; margin-top: 1.4em; margin-right: 20px; margin-left: 10px;" src="img/scattn.gif" />
-    <h1>SCATTN Animal Tracker</h1>
+    <img id="logo" src="img/scattn.gif" />
+    <h1 id="title">SCATTN Animal Tracker</h1>
   </div>
 
   <div id="page">
