@@ -66,6 +66,8 @@
         <button onclick="zoom()">Zoom Out</button>
       </div>
 
+      <div>&nbsp;</div>
+
       <fieldset>
         <legend>Options: </legend>
         <label for="show-receivers">All Receivers</label>

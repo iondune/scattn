@@ -145,6 +145,7 @@ $(document).ready(function() {
   });
 
   $("#bottom-control").draggable();
+  $("#sidebar").draggable();
 
   $("#play-button").button({
     disabled: true
