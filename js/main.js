@@ -638,7 +638,7 @@ function showReceivers() {
         position: { lat: rec.lat, lng: rec.lng },
         icon: {
           path: google.maps.SymbolPath.CIRCLE,
-          scale: 8,
+          scale: 4,
           fillColor: 'white',
           fillOpacity: 0.25,
           strokeColor: 'white',
