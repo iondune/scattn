@@ -13,6 +13,8 @@ var currentStartDate = new Date("2014-10-13 13:34:10");
 var dayBuckets = [];
 var numDays = 0;
 
+var cookieName = 'dont-show-welcome';
+
 function CustomMarker(latlng, angle, css, showclass, hideclass) {
   this.latlng_ = new google.maps.LatLng(latlng);
   this.angle_ = angle;
@@ -28,6 +30,7 @@ function CustomMarker(latlng, angle, css, showclass, hideclass) {
 
 
 function initialize() {
+
   var mapProp = {
     center:new google.maps.LatLng(34.007552, -118.500061),
     zoom:3,
@@ -116,6 +119,14 @@ function addDays(date, days) {
 }
 
 $(document).ready(function() {
+  if (Cookies.get(cookieName)) {
+    console.log("Cookie is set, skipping welcome popup.");
+  }
+  else {
+    console.log("No cookie set, showing welcome popup.");
+    showWelcome();
+  }
+
   $("#slider").slider({
     slide: function( event, ui ) {
       $("#date-display").text("Current date: " + addDays(currentStartDate, ui.value).toString('d-MMM-yyyy'));
@@ -161,9 +172,23 @@ function playButtonClicked() {
   }
 }
 
+function showWelcome() {
+  $("#obscure").show();
+  $("#welcome").show();
+}
+
 function closeWelcome() {
   $("#obscure").hide();
   $("#welcome").hide();
+
+  if ($("#dont-show-again").is(':checked')) {
+    console.log("Setting cookie");
+    Cookies.set(cookieName, 'true');
+  }
+  else {
+    console.log("Removing cookie");
+    Cookies.remove(cookieName);
+  }
 }
 
 function showOverlay() {

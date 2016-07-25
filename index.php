@@ -15,7 +15,10 @@
 
   <!-- jQuery -->
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.0.0/jquery.min.js"></script>
+
+  <!-- jQuery Plugins -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/datejs/1.0/date.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/js-cookie/2.1.2/js.cookie.min.js"></script>
 
   <!-- jQuery UI -->
   <link rel="stylesheet" href="//code.jquery.com/ui/1.12.0/themes/base/jquery-ui.css">
@@ -31,19 +34,21 @@
 
 <body <?php if (isset($_GET["track"])) echo "onload=loadAnimalPath(" . $_GET["track"] . ");"; ?>>
 
-  <div id="obscure">
+  <div id="obscure" style="display: none;">
   </div>
 
   <div id="loading" style="display: none;">
     Loading ...
   </div>
 
-  <div id="welcome">
+  <div id="welcome" style="display: none;">
     <div id="welcome-text">
       <h3><strong>Welcome to the SCATTN Animal Tracker!</strong></h3>
       <p>Orange arrows mean animals travelling over a period of multiple days.</p>
       <p>Windows can be dragged.</p>
+      <p>Receiver locations that flash indicate that that individual was detected at one of those receivers each day or within that hour of each day.</p>
       <p>This is just placeholder text that should be replaced with something more elegantly written.</p>
+      <p><input type='checkbox' id="dont-show-again" />Don't show this popup again.</p>
       <div>
         <button onclick="closeWelcome()">OK</button>
       </div>
@@ -108,6 +113,9 @@
       <div>&nbsp;</div>
       <div>
         <a href="calendar.php">Calendar View</a>
+      </div>
+      <div>
+        <a href="javascript:void(0)" onclick="showWelcome();">Show Welcome</a>
       </div>
 <?php if (isset($_GET["track"])) { ?>
       <div>
