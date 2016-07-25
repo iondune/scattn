@@ -113,6 +113,7 @@ function CustomMarker(latlng, angle, css, showclass, hideclass) {
 // Google map initialization
 function initialize() {
 
+  // Map settings
   var mapProp = {
     center:new google.maps.LatLng(34.007552, -118.500061),
     zoom: 3,
@@ -130,8 +131,10 @@ function initialize() {
     }
   };
 
+  // Create the map
   map = new google.maps.Map(document.getElementById("googleMap"), mapProp);
 
+  // Finish setting up the custom map marker class
   CustomMarker.prototype = new google.maps.OverlayView();
 
   CustomMarker.prototype.draw = function() {
@@ -194,11 +197,41 @@ function initialize() {
 
 }
 
+
+////////////////////
+// Date Utilities //
+////////////////////
+
 function addDays(date, days) {
   var result = new Date(date);
   result.setDate(result.getDate() + days);
   return result;
 }
+
+function stripTime(d) {
+  return new Date(d.getFullYear(), d.getMonth(), d.getDate());
+}
+
+function daysBetween(date1, date2) {
+
+    // The number of milliseconds in one day
+    var ONE_DAY = 1000 * 60 * 60 * 24
+
+    // Convert both dates to milliseconds
+    var date1_ms = date1.getTime()
+    var date2_ms = date2.getTime()
+
+    // Calculate the difference in milliseconds
+    var difference_ms = Math.abs(date1_ms - date2_ms)
+
+    // Convert back to days and return
+    return Math.round(difference_ms/ONE_DAY)
+
+}
+
+///////////////////////////////////
+// Callbacks and Show/Hide Pairs //
+///////////////////////////////////
 
 function playButtonClicked() {
   if (isPlaying()) {
@@ -238,6 +271,19 @@ function closeLoading() {
   $("#loading").hide();
 }
 
+function zoom() {
+  // Zooms the map out to a general view of the US/pacific area
+  map.fitBounds({
+    north: 37.0,
+    south: 18.0,
+    east: -115.0,
+    west: -121.2
+  });
+}
+
+/////////////////
+// SST Overlay //
+/////////////////
 
 function showOverlay() {
   loadOverlays(currentOverlay);
@@ -283,6 +329,7 @@ function loadOverlays(date) {
   if (lastOverlayRight != null) {
     lastOverlayRight.setMap(null);
   }
+
 }
 
 function hideOverlay() {
@@ -294,15 +341,6 @@ function hideOverlay() {
   if (overlayRight != null) {
     overlayRight.setMap(null);
   }
-}
-
-function zoom() {
-  map.fitBounds({
-    north: 37.0,
-    south: 18.0,
-    east: -115.0,
-    west: -121.2
-  });
 }
 
 function hideAnimalPath() {
@@ -320,27 +358,6 @@ function hideAnimalPath() {
       }
     }
     dayBuckets = [];
-
-}
-
-function stripTime(d) {
-  return new Date(d.getFullYear(), d.getMonth(), d.getDate());
-}
-
-function daysBetween(date1, date2) {
-
-    // The number of milliseconds in one day
-    var ONE_DAY = 1000 * 60 * 60 * 24
-
-    // Convert both dates to milliseconds
-    var date1_ms = date1.getTime()
-    var date2_ms = date2.getTime()
-
-    // Calculate the difference in milliseconds
-    var difference_ms = Math.abs(date1_ms - date2_ms)
-
-    // Convert back to days and return
-    return Math.round(difference_ms/ONE_DAY)
 
 }
 
