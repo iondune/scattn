@@ -32,15 +32,19 @@
   <link rel="icon" type="image/png" href="img/favicon.png">
 </head>
 
+<!-- Cram some PHP into the body tag to automatically load an animal track if the url includes &track=## -->
 <body <?php if (isset($_GET["track"])) echo "onload=loadAnimalPath(" . $_GET["track"] . ");"; ?>>
 
+  <!-- The "Obscure" layer is a fullscreen transparent overlay that darkens the screen when we are loading a track or displaying the welcome popup. -->
   <div id="obscure" style="display: none;">
   </div>
 
+  <!-- Loading indicator -->
   <div id="loading" style="display: none;">
     Loading ...
   </div>
 
+  <!-- Welcome popup -->
   <div id="welcome" style="display: none;">
     <div id="welcome-text">
       <h3><strong>Welcome to the SCATTN Animal Tracker!</strong></h3>
@@ -55,16 +59,22 @@
     </div>
   </div>
 
+  <!-- Header -->
   <div id="header">
     <img id="logo" src="img/scattn.gif" />
     <h1 id="title">SCATTN Animal Tracker</h1>
   </div>
 
+  <!-- Container for everything below header -->
   <div id="page">
 
+    <!-- Fullscreen google map -->
     <div id="googleMap"></div>
 
+    <!-- Sidebar control panel -->
     <div id="sidebar">
+
+      <!-- Dropdown list for easy access to a few demo animal tracks -->
       <div class="dropdown">
         <button class="dropbtn">Choose Animal</button>
         <div id="myDropdown" class="dropdown-content" onchange="myFunction()">
@@ -74,7 +84,8 @@
         </div>
       </div>
 
-      <div class="spacer"></div>
+      <!-- Spacer -->
+      <div style="margin-bottom: 16px;"></div>
 
       <div>
         <a href="animals.php">Full Animal List</a>
@@ -88,6 +99,7 @@
 
       <div>&nbsp;</div>
 
+      <!-- Option checkboxes -->
       <fieldset>
         <legend>Options: </legend>
         <label for="show-receivers">All Receivers</label>
@@ -101,6 +113,7 @@
 
       <div>&nbsp;</div>
 
+      <!-- Playback speed control -->
       <fieldset id="playback-speed">
         <legend>Playback Speed: </legend>
         <label for="playback-speed-slow">Slow</label>
@@ -110,29 +123,56 @@
         <label for="playback-speed-fast">Fast</label>
         <input type="radio" name="playback-speed" id="playback-speed-fast" onclick="setPlaybackSpeed(300)" autocomplete="off">
       </fieldset>
+
       <div>&nbsp;</div>
+
+      <!-- Link to experimental calendar view -->
       <div>
         <a href="calendar.php">Calendar View</a>
       </div>
+
+      <!-- Link to show the welcome popup again -->
       <div>
         <a href="javascript:void(0)" onclick="showWelcome();">Show Welcome</a>
       </div>
+
+      <!-- If we loaded this page with a track in the URL, add a button to clear the track. -->
+      <!-- This is useful so that refreshing the page won't always show the same track that was in the URL before ... -->
 <?php if (isset($_GET["track"])) { ?>
       <div>
         <a href="index.php">Clear</a>
       </div>
 <?php } ?>
-    </div>
 
+    </div> <!-- End Sidebar -->
+
+
+    <!-- Bottom Control Panel -->
     <div id="bottom-control">
+
+      <!-- Play button -->
       <div style="float: right;">
         <button id="play-button" onclick="playButtonClicked()" disabled="true">Play</button>
       </div>
+
+      <!-- When animal track loaded, shows date range -->
       <div style="margin-bottom: 8px;"><span id="date-range">&nbsp;</span></div>
-      <div style="margin-bottom: 16px;"><span id="date-display">&nbsp;</span> &nbsp;&nbsp;&nbsp; <span id="play-icon" class="blink" style="display: none;">&#9658;&#9658;</span></div>
+
+      <div style="margin-bottom: 16px;">
+        <!-- When animal track loaded, shows current date -->
+        <span id="date-display">&nbsp;</span>
+        <!-- A few spaces -->
+        &nbsp;&nbsp;&nbsp;
+        <!-- Blinking arrows to indicate ongoing playback -->
+        <span id="play-icon" class="blink" style="display: none;">&#9658;&#9658;</span>
+      </div>
+
+      <!-- jQuery UI slider for playback -->
       <div id="slider"></div>
-    </div>
-  </div>
+
+    </div> <!-- End Bottom Control Panel -->
+
+  </div><!-- End Page -->
 
 </body>
 

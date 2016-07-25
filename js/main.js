@@ -191,6 +191,17 @@ function closeWelcome() {
   }
 }
 
+function showLoading() {
+  $("#obscure").show();
+  $("#loading").show();
+}
+
+function closeLoading() {
+  $("#obscure").hide();
+  $("#loading").hide();
+}
+
+
 function showOverlay() {
   loadOverlays(currentOverlay);
 }
@@ -426,7 +437,7 @@ function latLngAngle(pair) {
 
 function loadAnimalPath(animal_id) {
 
-  $("#loading").show();
+  showLoading();
 
   stopPlayback();
   hideAnimalPath();
@@ -632,7 +643,7 @@ function loadAnimalPath(animal_id) {
     // Done!
     //
 
-    $("#loading").hide();
+    closeLoading();
   }});
 
 }
