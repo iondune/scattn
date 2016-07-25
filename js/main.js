@@ -1,20 +1,104 @@
 
+//////////////////////
+// Global Variables //
+//////////////////////
+
+// Holds the google map object
 var map;
 
+// Global SST overlay image
+// It's split into two parts because of a problem with image overlays spanning the entire globe
 var overlayLeft = null;
 var overlayRight = null;
 
+// Date of the current overlay image. Formatting is important, YYYYMMDD
 var currentOverlay = '20160621';
 
-var markers = []; // For receivers
+// Date format used in the bottom control panel
 var dateFormat = 'd-MMM-yyyy';
+
+// When an animal track is loaded, this stores the start date of that track.
+// Throw an initial dummy value in it now to prevent errors :)
 var currentStartDate = new Date("2014-10-13 13:34:10");
 
+// Each day bucket contains all the map elements needed to playback a single day
+// This is either a reference to the marker which should flash, or the arrow we need
+// to make visible.
 var dayBuckets = [];
+
+// Number of days in the current animal track
 var numDays = 0;
 
+// Cookie that we set if the user doesn't want to see the welcome popup anymore
 var cookieName = 'dont-show-welcome';
 
+
+///////////////////////////
+// jQuery Initialization //
+///////////////////////////
+
+// Standard jQuery init function, configures the UI elements and does some other page setup
+$(document).ready(function() {
+
+  // Show the welcome popup unless the user previously asked not to see it
+  if (Cookies.get(cookieName)) {
+    console.log("Cookie is set, skipping welcome popup.");
+  }
+  else {
+    console.log("No cookie set, showing welcome popup.");
+    showWelcome();
+  }
+
+  // Setup the slider UI
+  $("#slider").slider({
+    slide: function( event, ui ) {
+      $("#date-display").text("Current date: " + addDays(currentStartDate, ui.value).toString('d-MMM-yyyy'));
+      showDay(ui.value);
+    },
+    disabled: true
+  });
+
+  // Setup the checkbox UI
+  $("input[type='radio']").checkboxradio();
+
+  // Add event listener for the Show All Receivers button
+  $("#show-receivers").on("change", function () {
+    if ($(this).is(':checked')) {
+      showReceivers();
+    }
+    else {
+      hideReceivers();
+    }
+  });
+
+  // Add event listener for the Show SST button
+  $("#show-sst").on("change", function () {
+    if ($(this).is(':checked')) {
+      showOverlay();
+    }
+    else {
+      hideOverlay();
+    }
+  });
+
+  // Make both control panel widget/windows draggable
+  $("#bottom-control").draggable();
+  $("#sidebar").draggable();
+
+  // Disable the play button until an animal track is loaded
+  $("#play-button").button({
+    disabled: true
+  });
+});
+
+
+///////////////////////////////
+// Google Map Initialization //
+///////////////////////////////
+
+// Constructor for the CustomMarker we use for both arrows and receivers
+// The rest of the class is set up inside the initialize() function
+// AFAIK that is how it has to be to make it work...
 function CustomMarker(latlng, angle, css, showclass, hideclass) {
   this.latlng_ = new google.maps.LatLng(latlng);
   this.angle_ = angle;
@@ -24,19 +108,17 @@ function CustomMarker(latlng, angle, css, showclass, hideclass) {
   this.css_ = css;
   this.showclass_ = showclass;
   this.hideclass_ = hideclass;
-
-  // this.setMap(map);
 }
 
-
+// Google map initialization
 function initialize() {
 
   var mapProp = {
     center:new google.maps.LatLng(34.007552, -118.500061),
-    zoom:3,
+    zoom: 3,
     mapTypeId:google.maps.MapTypeId.SATELLITE,
     panControl: true,
-    zoomControl:true,
+    zoomControl: true,
     mapTypeControl: false,
     streetViewControl: false,
     panControlOptions:{
@@ -117,51 +199,6 @@ function addDays(date, days) {
   result.setDate(result.getDate() + days);
   return result;
 }
-
-$(document).ready(function() {
-  if (Cookies.get(cookieName)) {
-    console.log("Cookie is set, skipping welcome popup.");
-  }
-  else {
-    console.log("No cookie set, showing welcome popup.");
-    showWelcome();
-  }
-
-  $("#slider").slider({
-    slide: function( event, ui ) {
-      $("#date-display").text("Current date: " + addDays(currentStartDate, ui.value).toString('d-MMM-yyyy'));
-      showDay(ui.value);
-    },
-    disabled: true
-  });
-
-  $("input[type='radio']").checkboxradio();
-
-  $("#show-receivers").on("change", function () {
-    if ($(this).is(':checked')) {
-      showReceivers();
-    }
-    else {
-      hideReceivers();
-    }
-  });
-
-  $("#show-sst").on("change", function () {
-    if ($(this).is(':checked')) {
-      showOverlay();
-    }
-    else {
-      hideOverlay();
-    }
-  });
-
-  $("#bottom-control").draggable();
-  $("#sidebar").draggable();
-
-  $("#play-button").button({
-    disabled: true
-  });
-});
 
 function playButtonClicked() {
   if (isPlaying()) {
@@ -496,7 +533,7 @@ function loadAnimalPath(animal_id) {
     $("#slider").slider("enable");
     $("#slider").slider("option", "value", 0);
     $("#slider").slider("option", "max", days);
-    $("#date-display").text("Current date: " + currentStartDate.toString('d-MMM-yyyy'));
+    $("#date-display").text("Current date: " + currentStartDate.toString(dateFormat));
     $("#play-button").button("enable");
     console.log("There are %d days between", days);
 
@@ -648,13 +685,20 @@ function loadAnimalPath(animal_id) {
 
 }
 
+
+///////////////////////////
+// All Receivers Display //
+///////////////////////////
+
+var AllReceiverMarkers = [];
+
 function hideReceivers() {
 
-  for (var i = 0; i < markers.length; i++) {
-    markers[i].setMap(null);
+  for (var i = 0; i < AllReceiverMarkers.length; i++) {
+    AllReceiverMarkers[i].setMap(null);
   }
 
-  markers = [];
+  AllReceiverMarkers = [];
 
 }
 
@@ -684,7 +728,7 @@ function showReceivers() {
         map: map
       });
 
-      markers.push(marker);
+      AllReceiverMarkers.push(marker);
 
     }
 
