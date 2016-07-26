@@ -32,6 +32,21 @@ var numDays = 0;
 // Cookie that we set if the user doesn't want to see the welcome popup anymore
 var cookieName = 'dont-show-welcome';
 
+// Store the javascript interval (timer) used to trigger playback
+var interval = null;
+
+// Playback speed in ms (so default 750 = every 3/4 of a second)
+var playbackSpeed = 750;
+
+// Keep track of the last day that we showed
+// -1 indicates we haven't started playback yet
+// This is used to set the previous days' elements to not visible
+var lastDay = -1;
+
+// These are used to show "all" receivers if the user selects that option
+// We need to keep track of all of them so they can be turned off
+var AllReceiverMarkers = [];
+
 
 ///////////////////////////
 // jQuery Initialization //
@@ -89,6 +104,7 @@ $(document).ready(function() {
   $("#play-button").button({
     disabled: true
   });
+
 });
 
 
@@ -165,6 +181,10 @@ function initialize() {
     var panes = this.getPanes();
     panes.overlayImage.appendChild(this.div_);
 
+    // Because of the dreadfully asynchronous nature of this app...
+    // Sometimes show() has already been called on this object before the constructor is finished (!!!)
+    // Or at least that's how it seemed in testing
+    // So call it again now just in case
     if (this.visible_) {
       this.show();
     }
@@ -229,18 +249,19 @@ function daysBetween(date1, date2) {
 
 }
 
+// This is just some sneaky javascript to make it so that
+// all Array objects have a "last" method that returns the
+// element at the end of the array
+if (!Array.prototype.last){
+    Array.prototype.last = function(){
+      return this[this.length - 1];
+    };
+};
+
+
 ///////////////////////////////////
 // Callbacks and Show/Hide Pairs //
 ///////////////////////////////////
-
-function playButtonClicked() {
-  if (isPlaying()) {
-    stopPlayback();
-  }
-  else {
-    startPlayback();
-  }
-}
 
 function showWelcome() {
   $("#obscure").show();
@@ -296,6 +317,7 @@ function loadOverlays(date) {
   var lastOverlayLeft = overlayLeft;
   var lastOverlayRight = overlayRight;
 
+  // I fudged these numbers until they looked correct
   var imageBoundsLeft = {
       north: 90.000000,
       south: -90.000000,
@@ -343,29 +365,36 @@ function hideOverlay() {
   }
 }
 
-function hideAnimalPath() {
 
-    ///
-    // Clear out existing markers and data
-    //
+////////////////////////
+// Playback Functions //
+////////////////////////
 
-    for (var i = 0; i < dayBuckets.length; ++ i) {
-      for (var j = 0; j < dayBuckets[i].activeMarkers.length; ++ j) {
-        dayBuckets[i].activeMarkers[j].setMap(null);
-      }
-      if (dayBuckets[i].futurePath !== null) {
-        dayBuckets[i].futurePath.setMap(null);
-      }
-    }
-    dayBuckets = [];
-
+// Simple check to see if we're currently playing
+function isPlaying() {
+  if (interval !== null) {
+    return true;
+  }
+  else {
+    return false;
+  }
 }
 
-var interval = null;
-var playbackSpeed = 750;
+// Play button callback
+function playButtonClicked() {
+  if (isPlaying()) {
+    stopPlayback();
+  }
+  else {
+    startPlayback();
+  }
+}
 
 function startPlayback() {
+  // Only start playback if a track is loaded
   if (dayBuckets.length > 0) {
+
+    // If we somehow triggered playback twice... stop the existing playback
     if (interval !== null) {
       clearInterval(interval);
     }
@@ -376,16 +405,11 @@ function startPlayback() {
     interval = setInterval(advanceDay, playbackSpeed);
   }
   else {
-    $("#play-button").button("disable");
-  }
-}
 
-function isPlaying() {
-  if (interval !== null) {
-    return true;
-  }
-  else {
-    return false;
+    // Make the button not clickable if there is no animal track
+    // It should already be... but if for some reason it's not this is
+    // at least some sense of user feedback that the action failed
+    $("#play-button").button("disable");
   }
 }
 
@@ -400,9 +424,12 @@ function stopPlayback() {
   interval = null;
 }
 
+// Change the playback speed by deleting the current timer and starting a new one
+// If we're not playing back right now, preemptively changes it
 function setPlaybackSpeed(speed) {
   playbackSpeed = speed;
 
+  // This creates the flashing playback icons
   var icon = "&#9658;";
   var text = icon;
 
@@ -421,8 +448,6 @@ function setPlaybackSpeed(speed) {
   }
 }
 
-var lastDay = -1;
-
 function advanceDay() {
   var newDay = lastDay + 1;
   if (newDay < numDays) {
@@ -435,29 +460,31 @@ function advanceDay() {
   }
 }
 
+// Makes a day of the playback visible (And hides the previous day)
 function showDay(day) {
 
-  const fillOpacity = 0.5;
-  const strokeOpacity = 0.85;
-
+  // If another day is visible, hide all of its elements
   if (lastDay >= 0) {
+
+    // Hide all active markers
     for (var i = 0; i < dayBuckets[lastDay].activeMarkers.length; ++ i) {
       var marker = dayBuckets[lastDay].activeMarkers[i];
-      // marker.getIcon().scale = 2;
-      // marker.setMap(map);
       marker.hide();
     }
+
+    // Hide the visible arrows
     if (dayBuckets[lastDay].futurePath !== null) {
       dayBuckets[lastDay].futurePath.hide();
     }
   }
 
+  // Make any active receivers flash
   for (var i = 0; i < dayBuckets[day].activeMarkers.length; ++ i) {
     var marker = dayBuckets[day].activeMarkers[i];
-    // marker.getIcon().scale = 12;
-    // marker.setMap(map);
     marker.show();
   }
+
+  // Show arrows pointing to the next path
   if (dayBuckets[day].futurePath !== null) {
     dayBuckets[day].futurePath.setMap(map);
     dayBuckets[day].futurePath.show();
@@ -466,12 +493,12 @@ function showDay(day) {
   lastDay = day;
 }
 
-if (!Array.prototype.last){
-    Array.prototype.last = function(){
-      return this[this.length - 1];
-    };
-};
 
+////////////////////////////////////
+// Animal Track Loading Functions //
+////////////////////////////////////
+
+// Take some records from an animal track and make a lat/lng line between their coordinates
 function makeLatLngSegment(prev, next, days, total) {
   var extent = { lat: next.lat - prev.lat, lng: next.lng - prev.lng };
   var oneDay = { lat: extent.lat / total, lng: extent.lng / total };
@@ -482,6 +509,7 @@ function makeLatLngSegment(prev, next, days, total) {
     ];
 }
 
+// Get the angle between two lat/lng lines so that arrows can point in the right direction
 function latLngAngle(pair) {
   var prev = pair[0];
   var next = pair[1];
@@ -489,19 +517,25 @@ function latLngAngle(pair) {
   return Math.atan2(extent.lng, extent.lat);
 }
 
+// This is where the magic happens!
 function loadAnimalPath(animal_id) {
 
+  // Indicate to the user that loading is happening
   showLoading();
 
+  // Make sure playback is stopped
   stopPlayback();
+
+  // Delete all existing track data
   hideAnimalPath();
 
+  // Make an async call to the server to download a new track
   $.ajax({url: "animaltrack.php?id=" + animal_id, success: function(result) {
 
     var animal_track = result;
 
     ///
-    // Calculate min/max date and figure out which is the next record
+    // Calculate min/max date and figure out which is the next record for each record
     //
 
     var minDate = null;
@@ -527,6 +561,7 @@ function loadAnimalPath(animal_id) {
 
     ///
     // Figure out day indexes and days until next mark
+    // E.g. this way we know for a particular record if it is day 6, 11, etc.
     //
 
     for (var i = animal_track.length - 1; i >= 0; i--) {
@@ -541,6 +576,7 @@ function loadAnimalPath(animal_id) {
 
     ///
     // Now that we know the length of the trip, set up the slider ...
+    // This is mostly some jQuery to configure the UI elements properly
     //
 
     // Setup slider
@@ -559,9 +595,10 @@ function loadAnimalPath(animal_id) {
     // ... And create the data structure that will be used to draw day-by-day
     //
 
-    dayBuckets = [];
     numDays = days + 1;
-    dayBuckets.length += days + 1;
+
+    dayBuckets = [];
+    dayBuckets.length += numDays; // This is a sneaky javascript way to make an array larger
 
     for (var i = 0; i < dayBuckets.length; ++ i) {
       dayBuckets[i] = {
@@ -661,7 +698,7 @@ function loadAnimalPath(animal_id) {
 
 
     ///
-    // Calculate bounds and zoom on map
+    // Calculate bounds of the current path and zoom on map
     //
 
     if (animal_track.length > 0) {
@@ -678,8 +715,8 @@ function loadAnimalPath(animal_id) {
         west = Math.min(west, animal_track[i].lng);
       }
 
-      // console.log("bounds: %f %f %f %f", north, south, east, west);
-
+      // We add a bit to the top and bottom of the map so no markers are on the edge
+      // This amount is just the visible area, but at a minimum of 0.15 degrees so we don't zoom in too close
       var lat_boundary_size = Math.min(0.15, (north - south));
       var lng_boundary_size = Math.min(0.15, (east - west));
 
@@ -702,12 +739,28 @@ function loadAnimalPath(animal_id) {
 
 }
 
+function hideAnimalPath() {
+
+    ///
+    // Clear out existing markers and data
+    //
+
+    for (var i = 0; i < dayBuckets.length; ++ i) {
+      for (var j = 0; j < dayBuckets[i].activeMarkers.length; ++ j) {
+        dayBuckets[i].activeMarkers[j].setMap(null);
+      }
+      if (dayBuckets[i].futurePath !== null) {
+        dayBuckets[i].futurePath.setMap(null);
+      }
+    }
+    dayBuckets = [];
+
+}
+
 
 ///////////////////////////
 // All Receivers Display //
 ///////////////////////////
-
-var AllReceiverMarkers = [];
 
 function hideReceivers() {
 
@@ -728,8 +781,6 @@ function showReceivers() {
     var receivers_info = result;
     for (var i = 0; i < receivers_info.length; i++) {
       var rec = receivers_info[i];
-
-      // console.log("lat: %O, lng: %O [%O]", rec.lat, rec.lng, rec);
 
       var marker = new google.maps.Marker({
         position: { lat: rec.lat, lng: rec.lng },
