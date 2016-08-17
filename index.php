@@ -26,7 +26,6 @@
 
   <!-- SCRIPTS -->
   <script type="text/javascript" src="js/main.js"></script>
-  <script async defer src="http://maps.googleapis.com/maps/api/js?key=AIzaSyCMIhlsl_XZkBvxLfNSXeOzRBOQ-WwjGXU&callback=initialize"></script>
 
   <!-- FAVICON -->
   <link rel="icon" type="image/png" href="img/favicon.png">
@@ -173,6 +172,9 @@
     </div> <!-- End Bottom Control Panel -->
 
   </div><!-- End Page -->
+
+  <!-- GOOGLE MAPS -->
+  <script async defer src="http://maps.googleapis.com/maps/api/js?key=AIzaSyCMIhlsl_XZkBvxLfNSXeOzRBOQ-WwjGXU&callback=initialize"></script>
 
 </body>
 
